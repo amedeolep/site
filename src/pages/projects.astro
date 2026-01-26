@@ -1,0 +1,575 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Projects">
+	<header class="hero">
+		<h1 class="title">Projects.</h1>
+	</header>
+
+	<section class="accordion" aria-label="Projects">
+		<div class="item" data-state="closed">
+			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-build" id="trigger-build">
+				<div class="left">
+					<h3 class="name">Build and Research</h3>
+				</div>
+				<span class="meta" aria-hidden="true">+</span>
+			</button>
+			<div class="panel" id="panel-build" role="region" aria-labelledby="trigger-build" hidden>
+				<div class="panelInner">
+					<ul class="subList">
+						<li>
+							<div class="subRow">
+								<a class="subWordLink" href="/projects/ruby">
+									<span class="subWordInner">Talking to plants</span>
+								</a>
+								<span class="subRemainder">Transient RUBY expression driven by a drought responsive promoter.</span>
+							</div>
+						</li>
+
+						<li>
+							<div class="subRow">
+								<a class="subWordLink" href="/projects/nema">
+									<span class="subWordInner">Live</span>
+								</a>
+								<span class="subRemainder">fast die young</span>
+							</div>
+						</li>
+
+						<li>
+							<div class="subRow">
+								<a class="subWordLink" href="/projects/emg">
+									<span class="subWordInner">EMG</span>
+								</a>
+								<span class="subRemainder">acquisition system</span>
+							</div>
+						</li>
+
+						<li>
+							<div class="subRow">
+								<span class="subTitle">Restoring 1970 Puch Maxi</span>
+							</div>
+						</li>
+					</ul>
+					<!-- Add the rest later by copying a linked <li> above and changing href -->
+				</div>
+			</div>
+		</div>
+
+		<div class="item" data-state="closed">
+			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-make" id="trigger-make">
+				<div class="left">
+					<h3 class="name">Make and Perform</h3>
+				</div>
+				<span class="meta" aria-hidden="true">+</span>
+			</button>
+			<div class="panel" id="panel-make" role="region" aria-labelledby="trigger-make" hidden>
+				<div class="panelInner">
+					<ul class="subList">
+						<li><div class="subRow"><span class="subTitle">Painting</span></div></li>
+						<li><div class="subRow"><span class="subTitle">Music</span></div></li>
+						<li><div class="subRow"><span class="subTitle">Dancing</span></div></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="item" data-state="closed">
+			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-explore" id="trigger-explore">
+				<div class="left">
+					<h3 class="name">Explore and Endure</h3>
+				</div>
+				<span class="meta" aria-hidden="true">+</span>
+			</button>
+			<div class="panel" id="panel-explore" role="region" aria-labelledby="trigger-explore" hidden>
+				<div class="panelInner">
+					<ul class="subList">
+						<li><div class="subRow"><span class="subTitle">Horses</span></div></li>
+						<li><div class="subRow"><span class="subTitle">Cycling</span></div></li>
+						<li><div class="subRow"><span class="subTitle">Hikes and pilgrimages</span></div></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="item" data-state="closed">
+			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-serve" id="trigger-serve">
+				<div class="left">
+					<h3 class="name">Serve and Lead</h3>
+				</div>
+				<span class="meta" aria-hidden="true">+</span>
+			</button>
+			<div class="panel" id="panel-serve" role="region" aria-labelledby="trigger-serve" hidden>
+				<div class="panelInner">
+					<ul class="subList">
+						<li><div class="subRow"><span class="subTitle">Camp Highlander</span></div></li>
+						<li><div class="subRow"><span class="subTitle">OMV soup kitchen</span></div></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="item" data-state="closed">
+			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-journeys" id="trigger-journeys">
+				<div class="left">
+					<h3 class="name">Journeys</h3>
+				</div>
+				<span class="meta" aria-hidden="true">+</span>
+			</button>
+			<div class="panel" id="panel-journeys" role="region" aria-labelledby="trigger-journeys" hidden>
+				<div class="panelInner">
+					<ul class="subList">
+						<li><div class="subRow"><span class="subTitle">Romania</span></div></li>
+						<li><div class="subRow"><span class="subTitle">Argentina</span></div></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script is:inline data-astro-rerun>
+		(() => {
+			const SELECTOR = ".accordion";
+			const STORAGE_KEY = "projectsAccordionOpen";
+
+			function isNightMode() {
+				const de = document.documentElement;
+				const b = document.body;
+
+				const cls = `${de.className || ""} ${b?.className || ""}`.toLowerCase();
+				const themeA = (de.getAttribute("data-theme") || "").toLowerCase();
+				const themeB = (b?.getAttribute?.("data-theme") || "").toLowerCase();
+				const dsA = (de.dataset?.theme || "").toLowerCase();
+				const dsB = (b?.dataset?.theme || "").toLowerCase();
+
+				if (cls.includes("dark") || cls.includes("night")) return true;
+				if (themeA.includes("dark") || themeA.includes("night")) return true;
+				if (themeB.includes("dark") || themeB.includes("night")) return true;
+				if (dsA.includes("dark") || dsA.includes("night")) return true;
+				if (dsB.includes("dark") || dsB.includes("night")) return true;
+
+				return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+			}
+
+			function syncNightFlag(root) {
+				root.dataset.night = isNightMode() ? "1" : "0";
+			}
+
+			function animateOpen(panel) {
+				panel.hidden = false;
+
+				if (panel._te) panel.removeEventListener("transitionend", panel._te);
+
+				panel.style.height = "0px";
+				panel.offsetHeight;
+
+				const target = panel.scrollHeight;
+				panel.style.height = target + "px";
+
+				const onEnd = (e) => {
+					if (e.propertyName !== "height") return;
+					panel.style.height = "auto";
+					panel.removeEventListener("transitionend", onEnd);
+					panel._te = null;
+				};
+
+				panel._te = onEnd;
+				panel.addEventListener("transitionend", onEnd);
+			}
+
+			function animateClose(panel) {
+				if (panel._te) panel.removeEventListener("transitionend", panel._te);
+
+				panel.hidden = false;
+
+				const current = panel.scrollHeight;
+				panel.style.height = current + "px";
+				panel.offsetHeight;
+				panel.style.height = "0px";
+
+				const onEnd = (e) => {
+					if (e.propertyName !== "height") return;
+					panel.hidden = true;
+					panel.style.height = "";
+					panel.removeEventListener("transitionend", onEnd);
+					panel._te = null;
+				};
+
+				panel._te = onEnd;
+				panel.addEventListener("transitionend", onEnd);
+			}
+
+			function keyFromItem(item) {
+				const btn = item.querySelector(".trigger");
+				const id = btn?.id || "";
+				return id.startsWith("trigger-") ? id.slice("trigger-".length) : "";
+			}
+
+			function setHash(key) {
+				const url = new URL(window.location.href);
+				url.hash = key ? `#${key}` : "";
+				history.replaceState(null, "", url.toString());
+			}
+
+			function saveKey(key) {
+				try {
+					if (!key) {
+						sessionStorage.removeItem(STORAGE_KEY);
+						return;
+					}
+					sessionStorage.setItem(STORAGE_KEY, key);
+				} catch {
+					// ignore storage errors
+				}
+			}
+
+			function loadSavedKey() {
+				try {
+					return sessionStorage.getItem(STORAGE_KEY) || "";
+				} catch {
+					return "";
+				}
+			}
+
+			function setOpen(item, open) {
+				const btn = item.querySelector(".trigger");
+				const panel = item.querySelector(".panel");
+				if (!btn || !panel) return;
+
+				const key = keyFromItem(item);
+
+				if (open) {
+					item.dataset.state = "open";
+					btn.setAttribute("aria-expanded", "true");
+					animateOpen(panel);
+
+					if (key) {
+						setHash(key);
+						saveKey(key);
+					}
+				} else {
+					item.dataset.state = "closed";
+					btn.setAttribute("aria-expanded", "false");
+					animateClose(panel);
+
+					const current = (window.location.hash || "").replace("#", "");
+					if (key && current === key) setHash("");
+
+					const saved = loadSavedKey();
+					if (key && saved === key) saveKey("");
+				}
+			}
+
+			function openFromKey(root, key) {
+				if (!key) return false;
+
+				const trigger = root.querySelector(`#trigger-${CSS.escape(key)}`);
+				const item = trigger?.closest(".item");
+				if (!item) return false;
+
+				for (const it of root.querySelectorAll(".item")) {
+					if (it !== item && it.dataset.state === "open") setOpen(it, false);
+				}
+				setOpen(item, true);
+				return true;
+			}
+
+			function restoreOpenState(root) {
+				const hashKey = (window.location.hash || "").replace("#", "").trim();
+				if (hashKey) return openFromKey(root, hashKey);
+
+				const savedKey = loadSavedKey();
+				if (savedKey) return openFromKey(root, savedKey);
+
+				return false;
+			}
+
+			function initProjectsAccordion() {
+				const root = document.querySelector(SELECTOR);
+				if (!root) return;
+
+				syncNightFlag(root);
+
+				if (!root._themeObserver) {
+					const obs = new MutationObserver(() => syncNightFlag(root));
+					obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "data-theme"] });
+					if (document.body) obs.observe(document.body, { attributes: true, attributeFilter: ["class", "data-theme"] });
+					root._themeObserver = obs;
+				}
+
+				if (root.dataset.bound === "1") {
+					restoreOpenState(root);
+					return;
+				}
+				root.dataset.bound = "1";
+
+				for (const item of root.querySelectorAll(".item")) {
+					item.dataset.state = "closed";
+					const btn = item.querySelector(".trigger");
+					const panel = item.querySelector(".panel");
+					if (btn) btn.setAttribute("aria-expanded", "false");
+					if (panel) {
+						panel.hidden = true;
+						panel.style.height = "";
+					}
+				}
+
+				restoreOpenState(root);
+
+				root.addEventListener("click", (e) => {
+					const btn = e.target.closest(".trigger");
+					if (!btn || !root.contains(btn)) return;
+
+					const item = btn.closest(".item");
+					if (!item) return;
+
+					const isOpen = item.dataset.state === "open";
+
+					for (const it of root.querySelectorAll(".item")) {
+						if (it !== item && it.dataset.state === "open") setOpen(it, false);
+					}
+
+					setOpen(item, !isOpen);
+				});
+			}
+
+			initProjectsAccordion();
+			document.addEventListener("astro:page-load", initProjectsAccordion);
+		})();
+	</script>
+
+	<style>
+		.accordion {
+			margin-top: 2.5rem;
+			display: grid;
+			gap: 0.75rem;
+		}
+
+		.item {
+			border-radius: 14px;
+			border: 1px solid transparent;
+			background: transparent;
+			transition: background 180ms ease, border-color 180ms ease;
+		}
+
+		.item:hover {
+			border-color: rgba(0, 0, 0, 0.12);
+			background: rgba(0, 0, 0, 0.02);
+		}
+
+		.item[data-state="open"] {
+			border-color: rgba(0, 0, 0, 0.18);
+			background: rgba(0, 0, 0, 0.03);
+		}
+
+		.accordion[data-night="1"] .item:hover {
+			border-color: #8b7a4a;
+			background: rgba(139, 122, 74, 0.22);
+		}
+
+		.accordion[data-night="1"] .item[data-state="open"] {
+			border-color: rgba(139, 122, 74, 0.95);
+			background: rgba(139, 122, 74, 0.28);
+		}
+
+		.trigger {
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 1.25rem;
+
+			padding: 1.1rem 1.25rem;
+
+			background: transparent;
+			border: 0;
+
+			text-align: left;
+			cursor: pointer;
+		}
+
+		.trigger:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 3px;
+			border-radius: 10px;
+		}
+
+		.left {
+			min-width: 0;
+			flex: 1;
+			display: flex;
+			align-items: center;
+		}
+
+		.left::after {
+			content: "";
+			height: 1px;
+			margin-left: 0.9rem;
+			flex: 1;
+			min-width: 2.25rem;
+			background: rgba(0, 0, 0, 0.14);
+			transition: background 180ms ease;
+		}
+
+		.name {
+			margin: 0;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.meta {
+			flex: 0 0 auto;
+			opacity: 0.7;
+			transform-origin: center;
+			transition: transform 180ms ease, opacity 180ms ease;
+			font-size: 1.05rem;
+			line-height: 1;
+		}
+
+		.item[data-state="open"] .meta {
+			transform: rotate(45deg);
+			opacity: 0.9;
+		}
+
+		.item:hover .left::after {
+			background: rgba(0, 0, 0, 0.22);
+		}
+
+		.item[data-state="open"] .left::after {
+			background: rgba(0, 0, 0, 0.26);
+		}
+
+		.accordion[data-night="1"] .left::after {
+			background: rgba(255, 255, 255, 0.16);
+		}
+
+		.accordion[data-night="1"] .item:hover .left::after {
+			background: rgba(139, 122, 74, 0.75);
+		}
+
+		.accordion[data-night="1"] .item[data-state="open"] .left::after {
+			background: rgba(139, 122, 74, 0.85);
+		}
+
+		.panel {
+			overflow: hidden;
+			height: 0;
+			transition: height 220ms ease;
+		}
+
+		.panelInner {
+			padding: 0 1.25rem 1.1rem 1.25rem;
+		}
+
+		.subList {
+			margin: 0.35rem 0 0 0;
+			padding-left: 1.1rem;
+			list-style: disc;
+		}
+
+		.subList li {
+			margin: 0.35rem 0;
+		}
+
+		/* Grid layout prevents the initial-load "not right aligned" issue */
+		.subRow {
+			display: grid;
+			grid-template-columns: max-content 1fr;
+			align-items: baseline;
+			column-gap: 1rem;
+			width: 100%;
+		}
+
+		.subTitle {
+			min-width: 0;
+		}
+
+		.subRemainder {
+			min-width: 0;
+			text-align: right;
+			justify-self: stretch;
+			opacity: 0.86;
+		}
+
+		/* Link box (text only) */
+		.subWordLink {
+			position: relative;
+			display: inline-flex;
+			align-items: center;
+
+			text-decoration: none !important;
+
+			opacity: 0.92;
+			padding: 0.16rem 0.42rem;
+			border-radius: 10px;
+			overflow: hidden;
+			isolation: isolate;
+
+			background: rgba(0, 0, 0, 0.06);
+			transition: opacity 180ms ease, background 180ms ease;
+		}
+
+		.accordion[data-night="1"] .subWordLink {
+			background: rgba(139, 122, 74, 0.22);
+		}
+
+		.subWordLink:hover {
+			opacity: 1;
+		}
+
+		.subWordLink::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			border-radius: 10px;
+			z-index: 0;
+
+			background: rgba(155, 35, 45, 0.75);
+
+			clip-path: circle(0% at 50% 50%);
+			transition: clip-path 700ms ease-in-out, background 180ms ease;
+		}
+
+		.subWordLink:hover::before {
+			clip-path: circle(160% at 50% 50%);
+		}
+
+		.accordion[data-night="1"] .subWordLink::before {
+			background: rgba(139, 122, 74, 0.85);
+		}
+
+		@supports not (clip-path: circle(10% at 50% 50%)) {
+			.subWordLink::before {
+				transform: scale(0);
+				transform-origin: center;
+				transition: transform 700ms ease-in-out, background 180ms ease;
+			}
+			.subWordLink:hover::before {
+				transform: scale(1);
+			}
+		}
+
+		.subWordInner {
+			position: relative;
+			z-index: 1;
+			display: inline-flex;
+			align-items: center;
+			transition: color 700ms ease-in-out;
+		}
+
+		.subWordLink:hover .subWordInner {
+			color: white;
+		}
+
+		.accordion[data-night="1"] .subWordLink:hover .subWordInner {
+			color: rgba(0, 0, 0, 0.85);
+		}
+
+		.subWordLink:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 3px;
+			border-radius: 10px;
+		}
+	</style>
+</Layout>

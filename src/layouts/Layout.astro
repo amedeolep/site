@@ -1,0 +1,506 @@
+---
+import { ViewTransitions } from "astro:transitions";
+
+const { title = "Amedeo Leproni" } = Astro.props;
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const active =
+  pathname === "/" ? "home" :
+  (pathname === "/projects" || pathname.startsWith("/projects/")) ? "projects" :
+  "";
+
+const showMotifs = pathname === "/";
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<ViewTransitions />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:wght@400;500;600&display=swap"
+		/>
+
+		<link rel="icon" href="/favicon.ico" sizes="any" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<main class="page">
+			{/* Corner motifs only on home page */}
+			{showMotifs && (
+				<div class="cornerMotifs" aria-hidden="true">
+					<img class="motif tl" src="/motifs/pcell.png" alt="" loading="lazy" decoding="async" />
+					<img class="motif tr" src="/motifs/dna.png" alt="" loading="lazy" decoding="async" />
+					<img class="motif bl" src="/motifs/vinci.png" alt="" loading="lazy" decoding="async" />
+					<img class="motif br" src="/motifs/gaucho.png" alt="" loading="lazy" decoding="async" />
+				</div>
+			)}
+
+			<slot />
+		</main>
+
+		<!-- Bottom nav: home, projects, LinkedIn, theme toggle -->
+		<nav class="dock" aria-label="Primary" data-active={active || undefined}>
+			<span class="dockIndicator" aria-hidden="true"></span>
+
+			<a
+				class="dockBtn"
+				href="/"
+				aria-label="Home"
+				aria-current={active === "home" ? "page" : undefined}
+				data-tooltip="Home"
+			>
+				<img class="icon" src="/icons/home.svg" alt="" aria-hidden="true" />
+			</a>
+
+			<a
+				class="dockBtn"
+				href="/projects"
+				aria-label="Projects"
+				aria-current={active === "projects" ? "page" : undefined}
+				data-tooltip="Projects"
+			>
+				<img class="icon" src="/icons/projects.svg" alt="" aria-hidden="true" />
+			</a>
+
+			<a
+				class="dockBtn"
+				href="https://www.linkedin.com/in/amedeo-leproni/"
+				target="_blank"
+				rel="noreferrer"
+				aria-label="LinkedIn"
+				data-tooltip="LinkedIn"
+			>
+				<svg viewBox="0 0 24 24" aria-hidden="true" class="icon">
+					<path
+						fill="currentColor"
+						d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5ZM0.5 8H4.5V23H0.5V8Zm7.5 0H12v2.05h.06c.55-1.04 1.9-2.14 3.91-2.14C20.14 7.91 22 10.17 22 15.01V23h-4v-7.06c0-1.68-.03-3.85-2.34-3.85-2.34 0-2.7 1.83-2.7 3.72V23H9V8Z"
+					/>
+				</svg>
+			</a>
+
+			<button
+				class="dockBtn"
+				type="button"
+				id="themeToggle"
+				aria-label="Toggle theme"
+				aria-pressed="false"
+				data-tooltip="Day/Night"
+			>
+				<img class="icon" src="/icons/theme.svg" alt="" aria-hidden="true" />
+			</button>
+		</nav>
+
+		<script is:inline>
+			const STORAGE_KEY = 'theme';
+
+			function getPreferredTheme() {
+				const stored = localStorage.getItem(STORAGE_KEY);
+				if (stored === 'dark' || stored === 'light') return stored;
+				return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			}
+
+			function applyTheme(theme) {
+				document.documentElement.dataset.theme = theme;
+				const btn = document.getElementById('themeToggle');
+				if (btn) btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+			}
+
+			function initThemeToggle() {
+				applyTheme(getPreferredTheme());
+
+				const toggle = document.getElementById('themeToggle');
+				if (!toggle) return;
+
+				toggle.onclick = () => {
+					const current = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+					const next = current === 'dark' ? 'light' : 'dark';
+					localStorage.setItem(STORAGE_KEY, next);
+					applyTheme(next);
+				};
+			}
+
+			initThemeToggle();
+			document.addEventListener('astro:page-load', initThemeToggle);
+		</script>
+	</body>
+</html>
+
+<style is:global>
+	/* ===== Compact design system: colors, typography, spacing ===== */
+	:root {
+		/* Typography */
+		--font-sans: 'EB Garamond', Georgia, 'Times New Roman', serif;
+		--font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+		/* Type scale */
+		--font-size-xs: 0.78rem;
+		--font-size-sm: 0.9rem;
+		--font-size-md: 1rem;
+		--font-size-lg: 1.15rem;
+		--font-size-xl: 1.5rem;
+		--font-size-3xl: 2.7rem;
+
+		--leading-tight: 1.25;
+		--leading-normal: 1.45;
+		--leading-relaxed: 1.6;
+
+		/* Spacing scale */
+		--space-2xs: 0.25rem;
+		--space-xs: 0.5rem;
+		--space-sm: 0.75rem;
+		--space-md: 1rem;
+		--space-lg: 1.5rem;
+		--space-xl: 2rem;
+		--space-2xl: 2.75rem;
+		--space-3xl: 3.5rem;
+
+		/* Color system - light theme */
+		--bg: #f0ede2;
+		--bg-elevated: #f7f4ea;
+		--text: #22252b;
+		--muted: #4a5058;
+		--border: #d3cfbf;
+		--accent: #8b7a4a;
+		--dockBg: rgba(240, 237, 226, 0.9);
+
+		/* External SVGs in <img> do not inherit currentColor, so we tint via filter */
+		--dock-icon-filter: none;
+
+		/* Corner motif tinting */
+		--motif-filter: none;
+		--motif-blend: color-burn;
+		--motif-opacity: 0.7;
+	}
+
+	html[data-theme='dark'] {
+		--bg: #101319;
+		--bg-elevated: #151922;
+		--text: #e4e7ee;
+		--muted: #c3c9d4;
+		--border: #2b3140;
+		--accent: #e0b96a;
+		--dockBg: rgba(10, 12, 18, 0.9);
+
+		/* Make black SVGs used via <img> appear light in dark mode */
+		--dock-icon-filter: invert(1);
+
+		/* Motifs in dark mode: tint to warm muted yellow close to #8b7a4a */
+		--motif-filter: brightness(0) saturate(100%) invert(37%) sepia(58%) saturate(908%) hue-rotate(10deg) brightness(106%) contrast(41%);
+		--motif-blend: normal;
+		--motif-opacity: 0.75;
+	}
+
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+		background: var(--bg);
+		color: var(--text);
+		font-family: var(--font-sans);
+		font-size: var(--font-size-md);
+		line-height: var(--leading-relaxed);
+	}
+
+	h1,
+	h2,
+	h3,
+	.title,
+	.sectionTitle {
+		font-family: var(--font-serif);
+		font-weight: 700;
+		color: var(--text);
+		letter-spacing: 0.01em;
+	}
+
+	h1,
+	.title {
+		font-size: var(--font-size-3xl);
+		line-height: var(--leading-tight);
+		margin: 0 0 var(--space-sm);
+	}
+
+	h2,
+	.sectionTitle {
+		font-size: var(--font-size-xl);
+		line-height: var(--leading-normal);
+		margin: 0 0 var(--space-2xs);
+	}
+
+	p,
+	li {
+		font-family: var(--font-sans);
+		font-size: var(--font-size-md);
+		line-height: var(--leading-relaxed);
+		color: var(--muted);
+		margin: 0 0 var(--space-md);
+	}
+
+	small,
+	.kicker {
+		font-size: var(--font-size-xs);
+		letter-spacing: 0.1em;
+		color: var(--muted);
+	}
+
+	.page {
+		max-width: 720px;
+		margin: 0 auto;
+		padding: var(--space-3xl) var(--space-md) calc(var(--space-3xl) + 4rem);
+		position: relative; /* anchor motifs to page, so they scroll */
+		z-index: 0;
+	}
+
+	.hero {
+		margin-bottom: var(--space-2xl);
+	}
+
+	.section {
+		margin-top: var(--space-xl);
+		margin-bottom: 0;
+	}
+
+	.section + .section {
+		margin-top: var(--space-2xl);
+	}
+
+	.list {
+		padding-left: 1.2rem;
+		margin: 0.2rem 0 0;
+	}
+
+	.list li + li {
+		margin-top: 0.25rem;
+	}
+
+	.muted {
+		color: var(--muted);
+		font-size: var(--font-size-sm);
+	}
+
+	a {
+		color: inherit;
+		text-decoration-thickness: 0.08em;
+		text-underline-offset: 0.2em;
+	}
+
+	a:hover {
+		color: var(--accent);
+	}
+
+	.link {
+		color: var(--accent);
+		text-decoration: none;
+	}
+
+	.link:hover {
+		text-decoration: underline;
+	}
+
+	.cards {
+		row-gap: var(--space-sm);
+	}
+
+	.card {
+		background: var(--bg-elevated);
+		border-color: var(--border);
+	}
+
+	.cardTitle {
+		font-family: var(--font-serif);
+		font-size: var(--font-size-lg);
+	}
+
+	.cardBody {
+		font-size: var(--font-size-sm);
+		color: var(--muted);
+	}
+
+	/* Dock */
+	.dock {
+		--dock-btn: 44px;
+		--dock-gap: 0.3rem;
+
+		position: fixed;
+		left: 50%;
+		bottom: 2rem;
+		transform: translateX(-50%);
+
+		display: inline-flex;
+		gap: var(--dock-gap);
+		padding: 0.3rem;
+
+		border-radius: 20px;
+		border: 1px solid var(--border);
+		background: var(--dockBg);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		z-index: 50;
+	}
+
+	.dockIndicator {
+		position: absolute;
+		top: 0.3rem;
+		left: 0.3rem;
+
+		width: var(--dock-btn);
+		height: var(--dock-btn);
+
+		border-radius: 16px;
+		background: rgba(0, 0, 0, 0.04);
+
+		transform: translateX(0);
+		transition: transform 220ms ease;
+		view-transition-name: dock-indicator;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	html[data-theme='dark'] .dockIndicator {
+		background: rgba(255, 255, 255, 0.06);
+	}
+
+	.dockBtn {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+
+		width: var(--dock-btn);
+		height: var(--dock-btn);
+
+		border-radius: 16px;
+		border: none;
+		background: transparent;
+		color: var(--text);
+		cursor: pointer;
+		text-decoration: none;
+		overflow: visible;
+	}
+
+	.dock .dockBtn:hover,
+	.dock .dockBtn:focus-visible {
+		background: transparent;
+		color: var(--text);
+	}
+
+	.dock img.icon {
+		filter: var(--dock-icon-filter);
+	}
+
+	.dockBtn::after {
+		content: attr(data-tooltip);
+		position: absolute;
+		left: 50%;
+		bottom: calc(100% + 0.55rem);
+
+		transform: translateX(-50%) translateY(8px);
+		opacity: 0;
+		visibility: hidden;
+
+		font-family: var(--font-sans);
+		font-size: var(--font-size-sm);
+		line-height: var(--leading-tight);
+		color: var(--text);
+
+		background: var(--bg-elevated);
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		padding: 0.35rem 0.55rem;
+
+		white-space: nowrap;
+		pointer-events: none;
+
+		box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+		transition: opacity 160ms ease, transform 160ms ease, visibility 0s linear 160ms;
+		z-index: 10;
+	}
+
+	html[data-theme='dark'] .dockBtn::after {
+		box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+	}
+
+	.dockBtn:hover::after,
+	.dockBtn:focus-visible::after {
+		opacity: 1;
+		visibility: visible;
+		transform: translateX(-50%) translateY(0);
+		transition: opacity 160ms ease, transform 160ms ease, visibility 0s;
+	}
+
+	.dock[data-active="home"] .dockIndicator {
+		transform: translateX(calc((var(--dock-btn) + var(--dock-gap)) * 0));
+	}
+	.dock[data-active="projects"] .dockIndicator {
+		transform: translateX(calc((var(--dock-btn) + var(--dock-gap)) * 1));
+	}
+
+	.dockBtn:focus-visible {
+		outline: 2px solid rgba(59, 130, 246, 0.7);
+		outline-offset: 2px;
+	}
+
+	.icon {
+		width: 22px;
+		height: 22px;
+	}
+
+	.contactDetails summary {
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.contactDetails summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.contactFormWrap {
+		margin-top: 1.25rem;
+	}
+
+	.contactFormWrap iframe {
+		border: 0;
+	}
+
+	.cornerMotifs {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	.page > :not(.cornerMotifs) {
+		position: relative;
+		z-index: 1;
+	}
+
+	.motif {
+		position: absolute;
+		width: clamp(90px, 12vw, 170px);
+		height: auto;
+		opacity: var(--motif-opacity);
+		mix-blend-mode: var(--motif-blend);
+		filter: var(--motif-filter);
+	}
+
+	.motif.tl { top: 15rem; left: 0; transform: translateX(-140%) scale(3); }
+	.motif.tr { top: 8rem; right: 0; transform: translateX(100%) scale(1.8); }
+
+	.motif.bl { bottom: 3rem; left: 0; transform: translate(-110%, 45%) scale(2); }
+	.motif.br { bottom: 4rem; right: 0; transform: translate(110%, 45%) scale(2); }
+
+	@media (max-width: 600px) {
+		.cornerMotifs {
+			display: none;
+		}
+	}
+</style>
+<!-- redeploy -->
