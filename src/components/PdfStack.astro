@@ -6,9 +6,6 @@ export interface Props {
 }
 
 const { src, class: className = "", ariaLabel = "Embedded PDF document" } = Astro.props;
-
-// This makes Vite bundle the module so bare imports like "pdfjs-dist/..." work
-import pdfstackUrl from "../scripts/pdfstack.client.js?url";
 ---
 
 <div
@@ -18,7 +15,8 @@ import pdfstackUrl from "../scripts/pdfstack.client.js?url";
   aria-label={ariaLabel}
 ></div>
 
-<script type="module" src={pdfstackUrl}></script>
+<!-- IMPORTANT: no type, no define:vars, no is:inline. src only. -->
+<script src="../scripts/pdfstack.client.js"></script>
 
 <style>
   .pdfStack {
