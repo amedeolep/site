@@ -1,40 +1,38 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from "../../layouts/Layout.astro";
+import PdfStack from "../../components/PdfStack.astro";
 ---
 
-<Layout title="High-throughput lab imaging and phenotyping">
-	<header class="hero">
-		<a href="/projects" class="backLink">← Projects</a>
-		<h1 class="title">High-throughput lab imaging &amp; phenotyping</h1>
-		<p class="lede">Placeholder: brief description of the project, what problem it solves, and who it's for.</p>
-	</header>
+<Layout title="MPhil Dissertation">
+  <header class="hero">
+    <a href="/projects" class="backLink">← Projects</a>
+    <h1 class="title">MPhil Dissertation <br /> SEvdA Lab, Cambridge</h1>
+    <p class="lede">This page outlines my work developing bespoke hardware to enable novel means of investigating the interactions between parasitic nematodes and arabidopsis, by leveraging RUBY pigment expression and nematode colouration change in HSV.</p>
+  </header>
 
-	<section class="section">
-		<h2 class="sectionTitle">Overview</h2>
-		<p>
-			Placeholder content: describe the project in detail here. What you built, the technologies used, the impact, and
-			any notable challenges or outcomes.
-		</p>
-	</section>
 
-	<section class="section">
-		<h2 class="sectionTitle">Details</h2>
-		<p>
-			More placeholder content: technical details, timeline, collaborators, or any other relevant information you want
-			to highlight.
-		</p>
-	</section>
+  <section class="section">
+    <h2 class="sectionTitle">Poster</h2>
+    <PdfStack src="/docs/poster.pdf" ariaLabel="NEMA poster PDF" />
+  </section>
 
-	<style>
-		.backLink {
-			display: inline-block;
-			color: var(--muted);
-			text-decoration: none;
-			margin-bottom: 1rem;
-			font-size: var(--font-size-sm);
-		}
-		.backLink:hover {
-			text-decoration: underline;
-		}
-	</style>
+  <section class="section">
+  		<h2 class="sectionTitle">Project Report</h2>
+    <PdfStack src="/docs/NEMA.pdf" ariaLabel="NEMA dissertation PDF" />
+  </section>
+
+  <style>
+    .backLink {
+      display: inline-block;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 1rem;
+      font-size: var(--font-size-sm);
+    }
+    .backLink:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+
 </Layout>

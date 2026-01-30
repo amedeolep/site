@@ -20,28 +20,37 @@ import Layout from '../layouts/Layout.astro';
 					<ul class="subList">
 						<li>
 							<div class="subRow">
-								<a class="subWordLink" href="/projects/ruby">
-									<span class="subWordInner">Talking to plants</span>
+								<a class="subWordLink" href="/projects/nema">
+									<span class="subWordInner"style="color: black;">Live Fast Die Young</span>
 								</a>
-								<span class="subRemainder">Transient RUBY expression driven by a drought responsive promoter.</span>
+								<span class="subRemainder">Lab Automation &nbsp;&nbsp;&nbsp;&nbsp Plant-Parasite Interaction &nbsp;&nbsp;&nbsp;&nbsp Genetic Engineering</span>
 							</div>
 						</li>
 
 						<li>
 							<div class="subRow">
-								<a class="subWordLink" href="/projects/nema">
-									<span class="subWordInner">Live</span>
+								<a class="subWordLink" href="/projects/ruby">
+									<span class="subWordInner">Talking Plants</span>
 								</a>
-								<span class="subRemainder">fast die young</span>
+								<span class="subRemainder">Stress-Responsive Promoter &nbsp;&nbsp;&nbsp;&nbsp RUBY Cassette &nbsp;&nbsp;&nbsp;&nbsp Transient Expression</span>
+							</div>
+						</li>
+
+						<li>
+							<div class="subRow">
+								<a class="subWordLink" href="/projects/fret">
+									<span class="subWordInner">Cell Calcium Sensor</span>
+								</a>
+								<span class="subRemainder">FRET &nbsp;&nbsp;&nbsp;&nbsp FPLC &nbsp;&nbsp;&nbsp;&nbsp HeLa  &nbsp;&nbsp;&nbsp;&nbsp FLIM</span>
 							</div>
 						</li>
 
 						<li>
 							<div class="subRow">
 								<a class="subWordLink" href="/projects/emg">
-									<span class="subWordInner">EMG</span>
+									<span class="subWordInner">Guessing Hand Gestures</span>
 								</a>
-								<span class="subRemainder">acquisition system</span>
+								<span class="subRemainder">Analog Electronics &nbsp;&nbsp;&nbsp;&nbsp ML Classification  &nbsp;&nbsp;&nbsp;&nbsp Muscoskeletal Analysis</span>
 							</div>
 						</li>
 
@@ -59,7 +68,7 @@ import Layout from '../layouts/Layout.astro';
 		<div class="item" data-state="closed">
 			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-make" id="trigger-make">
 				<div class="left">
-					<h3 class="name">Make and Perform</h3>
+					<h3 class="name">Create and Perform</h3>
 				</div>
 				<span class="meta" aria-hidden="true">+</span>
 			</button>
@@ -472,7 +481,7 @@ import Layout from '../layouts/Layout.astro';
 			margin: 0.35rem 0;
 		}
 
-		/* Grid layout prevents the initial-load "not right aligned" issue */
+		/* Grid layout prevents the initial-load alignment issue */
 		.subRow {
 			display: grid;
 			grid-template-columns: max-content 1fr;
@@ -525,7 +534,8 @@ import Layout from '../layouts/Layout.astro';
 			border-radius: 10px;
 			z-index: 0;
 
-			background: rgba(155, 35, 45, 0.75);
+			background: rgba(0, 0, 0, 0.1);
+
 
 			clip-path: circle(0% at 50% 50%);
 			transition: clip-path 700ms ease-in-out, background 180ms ease;
@@ -543,7 +553,7 @@ import Layout from '../layouts/Layout.astro';
 			.subWordLink::before {
 				transform: scale(0);
 				transform-origin: center;
-				transition: transform 700ms ease-in-out, background 180ms ease;
+				transition: transform 500ms ease-in-out, background 180ms ease;
 			}
 			.subWordLink:hover::before {
 				transform: scale(1);
@@ -555,11 +565,9 @@ import Layout from '../layouts/Layout.astro';
 			z-index: 1;
 			display: inline-flex;
 			align-items: center;
-			transition: color 700ms ease-in-out;
-		}
+			transition: color 200ms ease-in-out;
+			color: black;
 
-		.subWordLink:hover .subWordInner {
-			color: white;
 		}
 
 		.accordion[data-night="1"] .subWordLink:hover .subWordInner {
@@ -570,6 +578,28 @@ import Layout from '../layouts/Layout.astro';
 			outline: 2px solid currentColor;
 			outline-offset: 3px;
 			border-radius: 10px;
+		}
+
+		/* Tailored heading colours for this page only */
+		.name {
+			color: #8a3a3a;
+		}
+
+		:global(html.dark) .name,
+		:global(html.night) .name,
+		:global(html[data-theme="dark"]) .name,
+		:global(html[data-theme="night"]) .name,
+		:global(body.dark) .name,
+		:global(body.night) .name,
+		:global(body[data-theme="dark"]) .name,
+		:global(body[data-theme="night"]) .name {
+			color: #8b7a4a;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			.name {
+				color: #8b7a4a;
+			}
 		}
 	</style>
 </Layout>

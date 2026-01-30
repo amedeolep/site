@@ -1,0 +1,52 @@
+---
+export interface Props {
+  src: string;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const { src, class: className = "", ariaLabel = "Embedded PDF document" } = Astro.props;
+
+// Vite turns this into a real URL in dev and build
+import clientScriptUrl from "../scripts/pdfstack.client.js?url";
+---
+
+<div
+  class={`pdfStack ${className}`}
+  data-pdf-stack
+  data-pdf-src={src}
+  aria-label={ariaLabel}
+></div>
+
+<script define:vars={{ clientScriptUrl }}>
+  // Load the client module only once per page
+  if (!window.__pdfStackClientLoaded) {
+    window.__pdfStackClientLoaded = true;
+    const s = document.createElement("script");
+    s.type = "module";
+    s.src = clientScriptUrl;
+    document.head.appendChild(s);
+  }
+</script>
+
+<style>
+  .pdfStack {
+    width: 100%;
+  }
+
+  .pdfPage {
+    width: 100%;
+    margin: 0 0 1rem 0;
+  }
+
+  .pdfPage canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .pdfError {
+    color: var(--muted);
+    font-size: var(--font-size-sm);
+  }
+</style>
