@@ -8,6 +8,35 @@ import Layout from '../layouts/Layout.astro';
 	</header>
 
 	<section class="accordion" aria-label="Projects">
+
+		<div class="item" data-state="closed">
+			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-journeys" id="trigger-journeys">
+				<div class="left">
+					<h3 class="name">Journeys</h3>
+				</div>
+				<span class="meta" aria-hidden="true">+</span>
+			</button>
+			<div class="panel" id="panel-journeys" role="region" aria-labelledby="trigger-journeys" hidden>
+				<div class="panelInner">
+					<ul class="subList">
+
+						<li>
+							<div class="subRow">
+								<a class="subWordLink" href="/projects/adventure/argentina">
+									<span class="subWordInner"style="color: black;">Argentina</span>
+								</a>
+								<span class="subRemainder">Cattle Ranching &nbsp;&nbsp;&nbsp;&nbsp Polo &nbsp;&nbsp;&nbsp;&nbsp Waitering</span>
+							</div>
+						</li>
+
+
+						<li><div class="subRow"><span class="subTitle">Romania</span></div></li>
+						<li><div class="subRow"><span class="subTitle">Argentina</span></div></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
 		<div class="item" data-state="closed">
 			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-build" id="trigger-build">
 				<div class="left">
@@ -18,9 +47,11 @@ import Layout from '../layouts/Layout.astro';
 			<div class="panel" id="panel-build" role="region" aria-labelledby="trigger-build" hidden>
 				<div class="panelInner">
 					<ul class="subList">
+
+
 						<li>
 							<div class="subRow">
-								<a class="subWordLink" href="/projects/nema">
+								<a class="subWordLink" href="/projects/tech/nema">
 									<span class="subWordInner"style="color: black;">Live Fast Die Young</span>
 								</a>
 								<span class="subRemainder">Lab Automation &nbsp;&nbsp;&nbsp;&nbsp Plant-Parasite Interaction &nbsp;&nbsp;&nbsp;&nbsp Genetic Engineering</span>
@@ -29,7 +60,7 @@ import Layout from '../layouts/Layout.astro';
 
 						<li>
 							<div class="subRow">
-								<a class="subWordLink" href="/projects/ruby">
+								<a class="subWordLink" href="/projects/tech/ruby">
 									<span class="subWordInner">Talking Plants</span>
 								</a>
 								<span class="subRemainder">Stress-Responsive Promoter &nbsp;&nbsp;&nbsp;&nbsp RUBY Cassette &nbsp;&nbsp;&nbsp;&nbsp Transient Expression</span>
@@ -38,7 +69,7 @@ import Layout from '../layouts/Layout.astro';
 
 						<li>
 							<div class="subRow">
-								<a class="subWordLink" href="/projects/fret">
+								<a class="subWordLink" href="/projects/tech/fret">
 									<span class="subWordInner">Cell Calcium Sensor</span>
 								</a>
 								<span class="subRemainder">FRET &nbsp;&nbsp;&nbsp;&nbsp FPLC &nbsp;&nbsp;&nbsp;&nbsp HeLa  &nbsp;&nbsp;&nbsp;&nbsp FLIM</span>
@@ -47,7 +78,7 @@ import Layout from '../layouts/Layout.astro';
 
 						<li>
 							<div class="subRow">
-								<a class="subWordLink" href="/projects/emg">
+								<a class="subWordLink" href="/projects/tech/emg">
 									<span class="subWordInner">Guessing Hand Gestures</span>
 								</a>
 								<span class="subRemainder">Analog Electronics &nbsp;&nbsp;&nbsp;&nbsp ML Classification  &nbsp;&nbsp;&nbsp;&nbsp Muscoskeletal Analysis</span>
@@ -118,22 +149,7 @@ import Layout from '../layouts/Layout.astro';
 			</div>
 		</div>
 
-		<div class="item" data-state="closed">
-			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-journeys" id="trigger-journeys">
-				<div class="left">
-					<h3 class="name">Journeys</h3>
-				</div>
-				<span class="meta" aria-hidden="true">+</span>
-			</button>
-			<div class="panel" id="panel-journeys" role="region" aria-labelledby="trigger-journeys" hidden>
-				<div class="panelInner">
-					<ul class="subList">
-						<li><div class="subRow"><span class="subTitle">Romania</span></div></li>
-						<li><div class="subRow"><span class="subTitle">Argentina</span></div></li>
-					</ul>
-				</div>
-			</div>
-		</div>
+
 	</section>
 
 	<script is:inline data-astro-rerun>

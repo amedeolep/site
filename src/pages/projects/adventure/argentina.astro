@@ -1,0 +1,605 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import diaryText from "./diary.txt?raw";
+
+import { puntaDelEste } from "../../../data/argentina/punta-del-este.js";
+import { buenosAires } from "../../../data/argentina/buenos-aires.js";
+import { carlosCasares } from "../../../data/argentina/carlos-casares.js";
+import { coronelSuarez } from "../../../data/argentina/coronel-suarez.js";
+import { sanMartinDeLosAndes } from "../../../data/argentina/san-martin-de-los-andes.js";
+import { patagonia } from "../../../data/argentina/patagonia.js";
+import { tierraDelFuego } from "../../../data/argentina/tierra-del-fuego.js";
+import { saltaYJujuy } from "../../../data/argentina/salta-y-jujuy.js";
+import { iguazu } from "../../../data/argentina/iguazu.js";
+
+// Diary split
+const paragraphs = diaryText
+  .split(/\n\s*\n/)
+  .map((p) => p.trim())
+  .filter(Boolean);
+
+const first = paragraphs[0] ?? "";
+const rest = paragraphs.slice(1);
+
+// Journey locations
+const locations = [
+  puntaDelEste,
+  buenosAires,
+  carlosCasares,
+  coronelSuarez,
+  sanMartinDeLosAndes,
+  patagonia,
+  tierraDelFuego,
+  saltaYJujuy,
+  iguazu,
+];
+
+// Map lat/lng to percent positions
+const minLatP = -57.5;
+const maxLatP = -22.0;
+const minLngP = -79.0;
+const maxLngP = -40.0;
+
+const pins = locations.map((l) => {
+  const x = ((l.pin.lng - minLngP) / (maxLngP - minLngP)) * 100;
+  const y = ((maxLatP - l.pin.lat) / (maxLatP - minLatP)) * 100;
+  return {
+    id: l.id,
+    label: l.label,
+    preview: l.preview,
+    gallery: l.gallery,
+    pos: {
+      x: Math.max(2, Math.min(98, x)),
+      y: Math.max(2, Math.min(98, y)),
+    },
+  };
+});
+---
+
+<Layout title="Argentina">
+  <header class="hero">
+    <a href="/projects" class="backLink">← Projects</a>
+    <h1 class="title">Argentina.</h1>
+    <p class="lede">A 9 month journey through a land that welcomed me and offered its rich gifts for me to behold.</p>
+
+    <figure class="heroImage">
+      <img
+        src="/docs/argentina/placeholder.png"
+        data-step="1"
+        alt="View from the tipi in Argentina"
+        loading="eager"
+        decoding="async"
+        onerror="if(this.dataset.step==='1'){this.src='/docs/argentina/placeholder.jpeg';this.dataset.step='2';return;} if(this.dataset.step==='2'){this.src='/docs/argentina/placeholder.png';this.dataset.step='3';return;} this.onerror=null; this.src='/docs/argentina/placeholder.png';"
+      />
+    </figure>
+  </header>
+
+  <section class="section">
+    <h2 class="sectionTitle">First diary entry, 19/10/2024</h2>
+
+    <div class="diary">
+      {first && <p class="para">{first}</p>}
+
+      {rest.length > 0 && (
+        <details class="more">
+          <summary class="toggle">
+            <span class="labelClosed">Read more</span>
+            <span class="labelOpen">Read less</span>
+          </summary>
+
+          <div class="rest">
+            {rest.map((p) => (
+              <p class="para">{p}</p>
+            ))}
+          </div>
+        </details>
+      )}
+    </div>
+  </section>
+
+  <script type="module" src="/scripts/argentinaJourney.js"></script>
+
+  <section class="section journeySection">
+    <h2 class="sectionTitle">The journey</h2>
+    <p class="journeyHint">Hover to preview. Click to pin. Then open the location.</p>
+
+    <div id="journeyRoot" class="journeyWrap">
+      <div id="journeyMapFrame" class="journeyMapFrame">
+        <img
+          src="/docs/argentina/map.png"
+          alt="Relief map of Argentina, Chile, and Uruguay"
+          class="journeyMapBg"
+          loading="lazy"
+          decoding="async"
+          onerror="this.src='/docs/argentina/placeholder.png'"
+        />
+
+        <div class="journeyPins">
+          {pins.map((loc) => (
+            <button
+              type="button"
+              class="journeyPin"
+              data-id={loc.id}
+              style={`left:${loc.pos.x}%; top:${loc.pos.y}%;`}
+              aria-label={loc.label}
+            >
+              <span class="pinDot" aria-hidden="true"></span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div id="journeyPopup" class="journeyPopup" hidden>
+        <div class="popupHead">
+          <div class="popupSpacer" aria-hidden="true"></div>
+          <div class="popupTitle" id="popupTitle"></div>
+          <button
+            type="button"
+            class="popupIconBtn"
+            data-action="close-popup"
+            aria-label="Close"
+            title="Close"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="popupBody">
+          <div class="popupMedia">
+            <button
+              type="button"
+              class="popupNav popupPrev"
+              data-action="popup-prev"
+              aria-label="Previous photo"
+              title="Previous"
+            >
+              ‹
+            </button>
+
+            <img
+              id="popupThumb"
+              class="popupThumb"
+              src="/docs/argentina/placeholder.png"
+              alt=""
+              decoding="async"
+              loading="lazy"
+              onerror="this.onerror=null; this.src='/docs/argentina/placeholder.png';"
+            />
+
+            <button
+              type="button"
+              class="popupNav popupNext"
+              data-action="popup-next"
+              aria-label="Next photo"
+              title="Next"
+            >
+              ›
+            </button>
+          </div>
+
+          <div id="popupBlurb" class="popupBlurb"></div>
+
+          <div class="popupActions">
+            <button type="button" class="seeMoreLink" data-action="see-location">See more</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full screen overlay. Starts closed via CSS (no hidden attribute needed). -->
+      <div id="journeyPanel" class="journeyPanel" aria-hidden="true">
+        <div id="journeyPanelInner" class="journeyPanelInner">
+          <div class="journeyPanelHead">
+            <div></div>
+            <div class="journeyPanelTitle" id="panelTitle"></div>
+            <button
+              type="button"
+              class="panelIconBtn"
+              data-action="close-panel"
+              aria-label="Close"
+              title="Close"
+            >
+              ×
+            </button>
+          </div>
+
+          <div class="journeyGallery">
+            <button type="button" class="navBtn navPrev" data-action="prev" aria-label="Previous photo">‹</button>
+
+            <div class="journeyImageFrame">
+              <img
+                id="galleryImage"
+                class="journeyImage"
+                src="/docs/argentina/placeholder.png"
+                alt=""
+                decoding="async"
+                loading="lazy"
+                onerror="this.onerror=null; this.src='/docs/argentina/placeholder.png';"
+              />
+            </div>
+
+            <button type="button" class="navBtn navNext" data-action="next" aria-label="Next photo">›</button>
+          </div>
+
+          <div class="journeyMeta">
+            <div id="galleryCounter" class="journeyCounter"></div>
+            <div id="galleryCaption" class="journeyCaption"></div>
+          </div>
+        </div>
+      </div>
+
+      <script type="application/json" id="journeyData" set:html={JSON.stringify(pins)}></script>
+    </div>
+  </section>
+
+  <style>
+    .backLink {
+      display: inline-block;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 1rem;
+      font-size: var(--font-size-sm);
+    }
+    .backLink:hover { text-decoration: underline; }
+
+    .heroImage { margin: 1.5rem 0 0 0; width: 100%; }
+    .heroImage img { display: block; width: 100%; height: auto; max-width: 100%; }
+
+    .diary { margin-top: 1.25rem; max-width: none; width: 100%; }
+    .para { margin: 0 0 1rem 0; line-height: 1.65; }
+
+    .more { margin-top: 0.25rem; position: relative; }
+    .toggle {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: var(--font-size-sm);
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+      list-style: none;
+    }
+    .toggle::-webkit-details-marker { display: none; }
+    .toggle:hover { color: var(--text); }
+
+    .labelOpen { display: none; }
+    details.more[open] .labelClosed { display: none; }
+    details.more[open] .labelOpen { display: inline; }
+
+    .rest { margin-top: 1rem; }
+    details.more[open] .toggle { position: absolute; bottom: 0; left: 0; width: fit-content; }
+    details.more[open] .rest { padding-bottom: 2.25rem; }
+
+    .journeySection { margin-top: 2.5rem; }
+    .journeyHint {
+      margin: 0.5rem 0 1rem 0;
+      color: var(--muted);
+      font-size: var(--font-size-sm);
+    }
+
+    .journeyWrap { width: 100%; }
+
+    .journeyMapFrame {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      user-select: none;
+      overflow: hidden;
+      border-radius: 22px;
+      border: 1px solid rgba(0, 0, 0, 0.18);
+      background: #f0ede5;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
+    }
+
+    :global(html.dark) .journeyMapFrame,
+    :global(html.night) .journeyMapFrame,
+    :global(html[data-theme="dark"]) .journeyMapFrame,
+    :global(html[data-theme="night"]) .journeyMapFrame {
+      border-color: rgba(255, 255, 255, 0.22);
+      background: #1a1a1a;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.38);
+    }
+
+    .journeyMapBg {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .journeyPins { position: absolute; inset: 0; pointer-events: none; }
+
+    .journeyPin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      border: 0;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .journeyPin:hover { transform: translate(-50%, -50%) scale(1.12); }
+
+    .pinDot {
+      display: block;
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      border: 3px solid rgba(138, 58, 58, 1);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.20),
+        0 0 0 2px rgba(255, 255, 255, 0.30);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .journeyPin:hover .pinDot {
+      box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.28),
+        0 0 0 3px rgba(255, 255, 255, 0.45);
+    }
+
+    :global(html.dark) .pinDot,
+    :global(html.night) .pinDot,
+    :global(html[data-theme="dark"]) .pinDot,
+    :global(html[data-theme="night"]) .pinDot {
+      border-color: rgba(220, 180, 100, 0.95);
+      background: rgba(10, 10, 10, 0.75);
+      box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.50),
+        0 0 0 2px rgba(220, 180, 100, 0.28);
+    }
+
+    /* Popup */
+    .journeyPopup {
+      position: fixed;
+      width: min(420px, calc(100vw - 24px));
+      background: rgba(240, 237, 229, 0.97);
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      padding: 14px;
+      z-index: 4000;
+      border-radius: 20px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.14);
+      font-family: inherit;
+    }
+    .journeyPopup[hidden] { display: none; }
+
+    :global(html.dark) .journeyPopup,
+    :global(html.night) .journeyPopup,
+    :global(html[data-theme="dark"]) .journeyPopup,
+    :global(html[data-theme="night"]) .journeyPopup {
+      background: rgba(18, 18, 18, 0.95);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 16px 46px rgba(0, 0, 0, 0.55);
+    }
+
+    .popupHead {
+      display: grid;
+      grid-template-columns: 22px 1fr 22px;
+      align-items: start;
+      margin-bottom: 10px;
+      min-height: 22px;
+    }
+
+    .popupSpacer { width: 22px; height: 22px; }
+
+    .popupTitle {
+      text-align: center;
+      font-size: var(--font-size-sm);
+      color: var(--text);
+      line-height: 1.2;
+      padding-top: 2px;
+    }
+
+    .popupIconBtn {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 18px;
+      line-height: 1;
+      padding: 0;
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      justify-self: end;
+    }
+    .popupIconBtn:hover { color: var(--text); }
+
+    .popupMedia {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 0 40px;
+      box-sizing: border-box;
+    }
+
+    .popupThumb {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 240px;
+      object-fit: contain;
+      border: 1px solid rgba(0, 0, 0, 0.10);
+      border-radius: 10px;
+      margin: 0;
+    }
+
+    .popupNav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 28px;
+      line-height: 1;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      opacity: 0.85;
+    }
+    .popupNav:hover { opacity: 1; }
+    .popupNav:disabled { opacity: 0.25; cursor: default; }
+    .popupPrev { left: 8px; }
+    .popupNext { right: 8px; }
+
+    .popupBlurb {
+      font-size: var(--font-size-sm);
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .popupActions { display: flex; justify-content: center; }
+
+    .seeMoreLink {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: var(--font-size-sm);
+      font-style: italic;
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+    .seeMoreLink:hover { color: var(--muted); }
+
+    /* Full screen overlay panel */
+    .journeyPanel {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      z-index: 99999;
+      padding: 22px 18px;
+      box-sizing: border-box;
+      display: none; /* closed by default */
+      align-items: center;
+      justify-content: center;
+    }
+
+    .journeyPanel.isOpen {
+      display: flex; /* opened by JS only */
+    }
+
+    .journeyPanelInner {
+      width: min(1200px, calc(100vw - 36px));
+      max-height: calc(100vh - 44px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .journeyPanelHead {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 34px 1fr 34px;
+      align-items: center;
+    }
+
+    .journeyPanelTitle {
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.95);
+      letter-spacing: 0.01em;
+    }
+
+    .panelIconBtn {
+      justify-self: end;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      font-size: 18px;
+      line-height: 1;
+      color: rgba(255, 255, 255, 0.85);
+      font-family: inherit;
+      padding: 0;
+    }
+    .panelIconBtn:hover { color: rgba(255, 255, 255, 1); }
+
+    .journeyGallery {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 52px 1fr 52px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .journeyImageFrame {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .journeyImage {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: calc(100vh - 220px);
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .navBtn {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-size: 34px;
+      line-height: 1;
+      padding: 0;
+      color: rgba(255, 255, 255, 0.85);
+      font-family: inherit;
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      opacity: 0.9;
+    }
+    .navBtn:hover { opacity: 1; }
+
+    .journeyMeta {
+      width: 100%;
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      padding-top: 2px;
+    }
+
+    .journeyCounter {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .journeyCaption {
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 14px;
+      line-height: 1.55;
+      text-align: center;
+      white-space: pre-wrap;
+      max-width: 72ch;
+    }
+  </style>
+</Layout>

@@ -133,6 +133,13 @@ const showMotifs = pathname === "/";
 </html>
 
 <style is:global>
+
+/* ===== Gallery overlay mode: hide dock only ===== */
+html.galleryOpen .dock {
+  display: none !important;
+}
+
+
 	/* ===== Compact design system: colors, typography, spacing ===== */
 	:root {
 		/* Typography */

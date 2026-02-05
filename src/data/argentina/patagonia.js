@@ -1,0 +1,1 @@
+export const patagonia = { id: "patagonia", label: "Patagonia", pin: { lat: -50.34, lng: -72.27 }, preview: { image: "/docs/argentina/placeholder.png", blurb: "OPTIONAL ONE LINE BLURB HERE" }, gallery: Array.from({ length: 8 }, () => ({ image: "/docs/argentina/placeholder.png", caption: "CAPTION GOES HERE", })), };

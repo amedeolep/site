@@ -1,101 +1,134 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Amedeo Leproni">
-	<header id="home" class="hero">
-		<p class="kicker">Hwæt</p>
-		<h1 class="title">Amedeo Leproni</h1>
+  <header id="home" class="hero">
+    <p class="kicker">Hwæt</p>
+    <h1 class="title">Amedeo Leproni</h1>
 
-		<p class="lede" style="font-style: italic; margin-bottom: 7rem;">
-			Scientist and engineer, curious explorer, respectful steward.
-		</p>
-	</header>
+    <p class="lede" style="font-style: italic; margin-bottom: 1.5rem;">
+      Scientist and engineer, curious explorer, respectful steward.
+    </p>
 
-	<section aria-label="About" class="section">
-		<h2 class="sectionTitle">About.</h2>
-		<p>
-			<strong>Currently</strong> Founder in Residence at Entrepreneurs First, building rapid microbial contamination tests
-			that unlock inventory liquidity for the food and beverage, pharmaceutical, and cosmetics industries.
-		</p>
-		<p>
-			Previously...
-			<br />I <strong>built</strong> a phenotyping platform to study plant–parasite interactions, and a forearm bioelectronic
-			signal acquisition system to classify hand gestures using machine learning.
-		</p>
-		<p>
-			I <strong>led</strong> a Cambridge University MPhil consulting project for AstraZeneca, defining the architecture of a
-			wearable cytokine release syndrome monitoring system to support early outpatient clearance following oncology clinical
-			trials.
-		</p>
-		<p>
-			I <strong>founded</strong> a soup kitchen welcoming homeless guests to shared dinners to combat isolation, served as an
-			equestrian guide and ranch hand in Argentina, Uruguay, and Romania, and speak four languages fluently.
-		</p>
-	</section>
+    <!-- Image: constrained to the same 720px gutter width -->
+    <div class="contentNarrow">
+      <figure class="heroImage">
+        <img
+          src="/docs/me.png"
+          alt="me"
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+    </div>
+  </header>
 
-	<section aria-label="Fascinations" class="section">
-		<h2 class="sectionTitle">Fascinations.</h2>
-		<ul class="list">
-			<li><strong>Molecular biology</strong>, nature’s engineering magnum opus, humbling and inspiring human ingenuity.</li>
-			<li><strong>Engineering</strong>, finely tuned systems to ease daily burdens and contend with the power of nature.</li>
-			<li><strong>Encounter and travel</strong>, immersion in raw humanity as the shortest path through the ache of becoming.</li>
-			<li><strong>Horses</strong>, mirrors of doubt and trust, bold companions in toil and play, reminding us to husband creation tenderly.</li>
-			<li><strong>History</strong>, people and places, rules and dissent, where the agency of a few colours the human story.</li>
-			<li><strong>Oil painting</strong>, deconstructing perception through line, form, and value to command light, shadow, and flesh.</li>
-		</ul>
-		<!--<p><strong>The Living God</strong>, to whom all my interests are ordered: intimate belonging to our Creator, contemplating Love ever-reaching and redeeming.</p>-->
-	</section>
+  <section aria-label="About" class="section">
+    <h2 class="sectionTitle">About.</h2>
+    <p>
+      <strong>Currently</strong> Founder in Residence at Entrepreneurs First, building rapid microbial contamination tests
+      that unlock inventory liquidity for the food and beverage, pharmaceutical, and cosmetics industries.
+    </p>
+    <p>
+      Previously...
+      <br />I <strong>built</strong> a phenotyping platform to study plant–parasite interactions, and a forearm bioelectronic
+      signal acquisition system to classify hand gestures using machine learning.
+    </p>
+    <p>
+      I <strong>led</strong> a Cambridge University MPhil consulting project for AstraZeneca, defining the architecture of a
+      wearable cytokine release syndrome monitoring system to support early outpatient clearance following oncology clinical
+      trials.
+    </p>
+    <p>
+      I <strong>founded</strong> a soup kitchen welcoming homeless guests to shared dinners to combat isolation, served as an
+      equestrian guide and ranch hand in Argentina, Uruguay, and Romania, and speak four languages fluently.
+    </p>
+  </section>
 
-	<section aria-label="Projects" class="section">
-		<h2 class="sectionTitle">Contact.</h2>
+  <section aria-label="Fascinations" class="section">
+    <h2 class="sectionTitle">Fascinations.</h2>
+    <ul class="list">
+      <li><strong>Molecular biology</strong>, nature’s engineering magnum opus, humbling and inspiring human ingenuity.</li>
+      <li><strong>Engineering</strong>, finely tuned systems to ease daily burdens and contend with the power of nature.</li>
+      <li><strong>Encounter and travel</strong>, immersion in raw humanity as the shortest path through the ache of becoming.</li>
+      <li><strong>Horses</strong>, mirrors of doubt and trust, bold companions in toil and play, reminding us to husband creation tenderly.</li>
+      <li><strong>History</strong>, people and places, rules and dissent, where the agency of a few colours the human story.</li>
+      <li><strong>Oil painting</strong>, deconstructing perception through line, form, and value to command light, shadow, and flesh.</li>
+    </ul>
+  </section>
 
-		<details class="contactDetails">
-			<summary class="muted">
-				Reach me <span class="link contactTrigger">here</span>. Remember to check out my
-				<a href="/projects" class="link">projects</a>.
-			</summary>
+  <section aria-label="Projects" class="section">
+    <h2 class="sectionTitle">Contact.</h2>
 
-			<div class="contactFormWrap">
-				<iframe
-					src="https://docs.google.com/forms/d/e/1FAIpQLSd3lH0PrHPzpOygdmESCbDNpH0ovIOK73aIArv2PAQWTTbncg/viewform?embedded=true"
-					width="100%"
-					height="720"
-					frameborder="0"
-					marginheight="0"
-					marginwidth="0"
-					loading="lazy"
-					title="Contact form"
-				>
-					Loading…
-				</iframe>
-			</div>
-		</details>
-	</section>
+    <details class="contactDetails">
+      <summary class="muted">
+        Reach me <span class="link contactTrigger">here</span>. Remember to check out my
+        <a href="/projects" class="link">projects</a>.
+      </summary>
 
-	<style>
-		/* Light mode header ink */
-		.sectionTitle {
-			color: #8a3a3a;
-		}
+      <div class="contactFormWrap">
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSd3lH0PrHPzpOygdmESCbDNpH0ovIOK73aIArv2PAQWTTbncg/viewform?embedded=true"
+          width="100%"
+          height="720"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          loading="lazy"
+          title="Contact form"
+        >
+          Loading…
+        </iframe>
+      </div>
+    </details>
+  </section>
 
-		/* Night mode: muted yellow headers */
-		:global(html.dark) .sectionTitle,
-		:global(html.night) .sectionTitle,
-		:global(html[data-theme="dark"]) .sectionTitle,
-		:global(html[data-theme="night"]) .sectionTitle,
-		:global(body.dark) .sectionTitle,
-		:global(body.night) .sectionTitle,
-		:global(body[data-theme="dark"]) .sectionTitle,
-		:global(body[data-theme="night"]) .sectionTitle {
-			color: #8b7a4a;
-		}
+  <style>
+    /* Constrain to your Layout width */
+    .contentNarrow {
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+    }
 
-		/* Fallback if night mode is driven by system preference */
-		@media (prefers-color-scheme: dark) {
-			.sectionTitle {
-				color: #8b7a4a;
-			}
-		}
-	</style>
+/* Round corners on the container and keep it centred */
+.heroImage {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 520px; /* tweak smaller or larger */
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+/* Make image fill the smaller container */
+.heroImage img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+    /* Light mode header ink */
+    .sectionTitle {
+      color: #8a3a3a;
+    }
+
+    /* Night mode: muted yellow headers */
+    :global(html.dark) .sectionTitle,
+    :global(html.night) .sectionTitle,
+    :global(html[data-theme="dark"]) .sectionTitle,
+    :global(html[data-theme="night"]) .sectionTitle,
+    :global(body.dark) .sectionTitle,
+    :global(body.night) .sectionTitle,
+    :global(body[data-theme="dark"]) .sectionTitle,
+    :global(body[data-theme="night"]) .sectionTitle {
+      color: #8b7a4a;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .sectionTitle {
+        color: #8b7a4a;
+      }
+    }
+  </style>
 </Layout>
