@@ -45,7 +45,7 @@ const showMotifs = pathname === "/";
 			<slot />
 		</main>
 
-		<!-- Bottom nav: home, projects, LinkedIn, theme toggle -->
+		{/* Bottom nav: home, projects, LinkedIn, theme toggle */}
 		<nav class="dock" aria-label="Primary" data-active={active || undefined}>
 			<span class="dockIndicator" aria-hidden="true"></span>
 
@@ -133,12 +133,10 @@ const showMotifs = pathname === "/";
 </html>
 
 <style is:global>
-
-/* ===== Gallery overlay mode: hide dock only ===== */
-html.galleryOpen .dock {
-  display: none !important;
-}
-
+	/* ===== Gallery overlay mode: hide dock only ===== */
+	html.galleryOpen .dock {
+		display: none !important;
+	}
 
 	/* ===== Compact design system: colors, typography, spacing ===== */
 	:root {
@@ -262,7 +260,6 @@ html.galleryOpen .dock {
 		margin: 0 auto;
 		padding: var(--space-3xl) var(--space-md) calc(var(--space-3xl) + 4rem);
 		position: relative; /* anchor motifs to page, so they scroll */
-		z-index: 0;
 	}
 
 	.hero {
@@ -477,16 +474,12 @@ html.galleryOpen .dock {
 		border: 0;
 	}
 
+	/* Motifs: keep behind everything without creating stacking traps */
 	.cornerMotifs {
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
-		z-index: 0;
-	}
-
-	.page > :not(.cornerMotifs) {
-		position: relative;
-		z-index: 1;
+		z-index: -1; /* behind all normal content, but still visible above the body background */
 	}
 
 	.motif {

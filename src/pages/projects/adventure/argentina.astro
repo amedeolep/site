@@ -60,7 +60,7 @@ const pins = locations.map((l) => {
   <header class="hero">
     <a href="/projects" class="backLink">← Projects</a>
     <h1 class="title">Argentina.</h1>
-    <p class="lede">A 9 month journey through a land that welcomed me and offered its rich gifts for me to behold.</p>
+    <p class="lede">A 9-month journey, a people who welcomed me like their own, and a total embrace of what adventures came to me.</p>
 
     <figure class="heroImage">
       <img
@@ -70,12 +70,18 @@ const pins = locations.map((l) => {
         loading="eager"
         decoding="async"
         onerror="if(this.dataset.step==='1'){this.src='/docs/argentina/placeholder.jpeg';this.dataset.step='2';return;} if(this.dataset.step==='2'){this.src='/docs/argentina/placeholder.png';this.dataset.step='3';return;} this.onerror=null; this.src='/docs/argentina/placeholder.png';"
-      />
+              />
+
+<p class="lede" style="text-align: center; font-style: italic; margin-top: 0.35rem;">
+  Horseback view from Mirador, Tipiliuke Lodge.
+</p>
+
+
     </figure>
   </header>
 
   <section class="section">
-    <h2 class="sectionTitle">First diary entry, 19/10/2024</h2>
+    <h2 class="sectionTitle">Arrival: diary entry 19/10/2024</h2>
 
     <div class="diary">
       {first && <p class="para">{first}</p>}
@@ -101,7 +107,7 @@ const pins = locations.map((l) => {
 
   <section class="section journeySection">
     <h2 class="sectionTitle">The journey</h2>
-    <p class="journeyHint">Hover to preview. Click to pin. Then open the location.</p>
+    <p class="journeyHint">Follow my travels around the Argentine. (hover to preview, click to pin, open the gallery) <br> Shot on Ilford Pan 100 black and white film. </p>
 
     <div id="journeyRoot" class="journeyWrap">
       <div id="journeyMapFrame" class="journeyMapFrame">
@@ -180,12 +186,12 @@ const pins = locations.map((l) => {
           <div id="popupBlurb" class="popupBlurb"></div>
 
           <div class="popupActions">
-            <button type="button" class="seeMoreLink" data-action="see-location">See more</button>
+            <button type="button" class="seeMoreLink" data-action="see-location">See gallery</button>
           </div>
         </div>
       </div>
 
-      <!-- Full screen overlay. Starts closed via CSS (no hidden attribute needed). -->
+      <!-- Full screen overlay panel. Starts closed via CSS. -->
       <div id="journeyPanel" class="journeyPanel" aria-hidden="true">
         <div id="journeyPanelInner" class="journeyPanelInner">
           <div class="journeyPanelHead">
@@ -231,11 +237,67 @@ const pins = locations.map((l) => {
     </div>
   </section>
 
-    <section class="section after">
+  <section class="section after">
     <h2 class="sectionTitle">Afterword</h2>
-    <p class="journeyHint">Martin Fierro. Some other wise story.</p>
-    </section>
+    <p class="journeyHint">"Los hermanos sean unidos &nbsp; porque ésa es la ley primera;<br>Tengan unión verdadera &nbsp; en cualquier tiempo que sea,<br>Porque si entre ellos se pelean &nbsp; los devoran los de afuera." <br> <br>  - Martín Fierro, 1872</p>
+    <p class="journeyHint">Travelling has shown me that with an open, unassuming heart (and while keeping your wits about you), a stranger may become a dear, lifelong friend. Gracias a todos ustedes, queridos amigos, que me dieron la bienvenida y me hicieron sentir en casa.</p>
+  </section>
 
+  <!-- Patch: click same pin again closes popup (does not break existing handlers) -->
+  <script type="module" is:inline>
+    function initPinToggleClose() {
+      const popup = document.getElementById("journeyPopup");
+      const pinsLayer = document.querySelector(".journeyPins");
+      if (!popup || !pinsLayer) return;
+
+      const closeBtn = popup.querySelector('[data-action="close-popup"]');
+      if (!closeBtn) return;
+
+      let pinnedId = null;
+
+      const isVisible = () => !popup.hasAttribute("hidden");
+
+      // Keep our state in sync if popup is hidden by any means
+      const mo = new MutationObserver(() => {
+        if (!isVisible()) pinnedId = null;
+      });
+      mo.observe(popup, { attributes: true, attributeFilter: ["hidden"] });
+
+      closeBtn.addEventListener("click", () => {
+        pinnedId = null;
+      });
+
+      // Capture phase so we can cancel only the second click on the same pin
+      pinsLayer.addEventListener(
+        "click",
+        (e) => {
+          const pinBtn = e.target && e.target.closest ? e.target.closest(".journeyPin") : null;
+          if (!pinBtn) return;
+
+          const id = pinBtn.getAttribute("data-id");
+          if (!id) return;
+
+          if (pinnedId === id && isVisible()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeBtn.click();
+            pinnedId = null;
+            return;
+          }
+
+          pinnedId = id;
+        },
+        true
+      );
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initPinToggleClose, { once: true });
+    } else {
+      initPinToggleClose();
+    }
+    document.addEventListener("astro:page-load", initPinToggleClose);
+  </script>
 
   <style>
     .backLink {
@@ -274,6 +336,17 @@ const pins = locations.map((l) => {
     details.more[open] .rest { padding-bottom: 2.25rem; }
 
     .journeySection { margin-top: 2.5rem; }
+
+    /*
+      Critical: lift the entire journey section above later sections and the dock.
+      Your Layout gives direct children of .page a z-index: 1, so later sections can cover earlier ones.
+      Raising this section fixes the popup being "under" both the dock and the next sections.
+    */
+    .journeySection {
+      position: relative;
+      z-index: 100000;
+    }
+
     .journeyHint {
       margin: 0.5rem 0 1rem 0;
       color: var(--muted);
@@ -493,13 +566,13 @@ const pins = locations.map((l) => {
       z-index: 99999;
       padding: 22px 18px;
       box-sizing: border-box;
-      display: none; /* closed by default */
+      display: none;
       align-items: center;
       justify-content: center;
     }
 
     .journeyPanel.isOpen {
-      display: flex; /* opened by JS only */
+      display: flex;
     }
 
     .journeyPanelInner {
