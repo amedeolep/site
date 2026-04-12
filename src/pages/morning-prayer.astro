@@ -1,0 +1,912 @@
+---
+export const prerender = false;
+
+import Layout from "../layouts/Layout.astro";
+
+const pageTitle = "Amedeo's Morning Prayer";
+
+type DailyData = {
+	dateLabel: string;
+	saintOfTheDay: string;
+	psalm: {
+		reference: string;
+		raw_refrain: string;
+		verses: string[];
+		display_text: string;
+		mode: "mass-fallback" | "placeholder";
+	};
+	gospel: {
+		reference: string;
+		text: string;
+	};
+};
+
+const fallbackDaily: DailyData = {
+	dateLabel: new Intl.DateTimeFormat("en-GB", {
+		timeZone: "Europe/Rome",
+		weekday: "long",
+		day: "numeric",
+		month: "long",
+		year: "numeric",
+	}).format(new Date()),
+	saintOfTheDay: "Saint N.",
+	psalm: {
+		reference: "Psalm of the day",
+		raw_refrain: "",
+		verses: [],
+		display_text: "Psalm unavailable right now.",
+		mode: "placeholder",
+	},
+	gospel: {
+		reference: "Gospel of the day",
+		text: "Gospel unavailable right now.",
+	},
+};
+
+let daily: DailyData = fallbackDaily;
+
+try {
+	const apiUrl = new URL("/api/daily", Astro.url);
+	const response = await fetch(apiUrl, {
+		headers: {
+			accept: "application/json",
+		},
+	});
+
+	if (response.ok) {
+		daily = (await response.json()) as DailyData;
+	}
+} catch {
+	daily = fallbackDaily;
+}
+
+const saintResponse = "℟. Pray for us";
+
+const saintInvocations = [
+	daily.saintOfTheDay,
+	"Holy Mary, Mother of God",
+	"Holy angels of God",
+	"Saint John the Baptist",
+	"Saint Joseph",
+	"Saints Peter and Paul",
+];
+
+function injectSaint(text: string) {
+	return text
+		.replaceAll("Saint N.", daily.saintOfTheDay)
+		.replaceAll("Saint N", daily.saintOfTheDay);
+}
+
+const petitions = [
+	"Lord, increase in us faith, hope, and love.",
+	"Bless and protect our families.",
+	"Guide our work and all we do this day.",
+	"Strengthen and console our friends.",
+	"Grant peace to the world.",
+	"Care for the poor, the sick, and all who suffer.",
+];
+
+const morningOfferings = [
+	{
+		label: "A",
+		text: injectSaint(`O Jesus, I come before you at the beginning of this day.
+I gaze at your face,
+I look upon your side pierced by the lance.
+Your wounded heart speaks to me
+of God's love poured out for us.
+Take, Lord, and receive my heart:
+the words of faith that I speak,
+the works of justice I would do,
+my joys and sufferings.
+When I come to the Eucharistic altar,
+gather my offerings to your own
+for the life of the world.
+At the end of the day,
+place me with Mary, your mother,
+with Saint N. and all the saints
+by your side, forever surrounded by your love.
+℟. Amen.`),
+	},
+	{
+		label: "B",
+		text: `Eternal Father,
+I offer You everything I do this day:
+my work, my prayers, my apostolic efforts;
+my time with family and friends;
+my hours of relaxation;
+my difficulties, problems and distress,
+which I shall try to bear with patience.
+Join these, my gifts,
+to the unique offering
+which Jesus Christ, your Son,
+renews today in the Eucharist.
+Grant, I pray, that,
+vivified by the Holy Spirit,
+my life this day
+may be of service to you and your children
+and help consecrate the world to you.
+℟. Amen.`,
+	},
+	{
+		label: "C",
+		text: injectSaint(`God, our Father,
+I offer you my day,
+my prayers, thoughts and words,
+my actions, joys, and sufferings
+in union with the Christ your Son,
+for the salvation of the world.
+May the Holy Spirit, who guided Jesus,
+be my guide and my strength today
+so that I may witness to your love.
+With Mary, the mother of our Lord and the Church,
+with Saint N and all your saints
+I pray for my family and friends,
+for the sick and the suffering,
+those at home and those who are travelling
+(mention other particular intentions)
+and all the clergy and religious
+especially our Holy Father N.
+and bishop N.
+both of whose intentions
+I commend to your goodness.`),
+	},
+	{
+		label: "D",
+		text: `Heavenly Father,
+I offer you this day
+all that I do and think and say
+uniting it in the power of the Holy Spirit
+with what was done
+by Jesus Christ, your only Son.
+℟. Amen.`,
+	},
+];
+
+const closingPrayerOptions = [
+	`Let us pray
+
+Lord our God, King of heaven and earth,
+we humbly pray
+that you would guide, sanctify, and govern,
+our hearts and bodies,
+in the way of your law
+and the following of your commandments:
+that through thy most mighty protection, Saviour of the world,
+we may be kept safe in both body and soul
+both now and forever.
+℟. Amen.`,
+	`Lord,
+may everything we do
+begin with your inspiration
+and continue with your help
+so that all our prayers and works
+may begin in you
+and by you be happily ended
+We ask this through Christ our Lord.
+℟. Amen.`,
+];
+
+const benedictusText = `Blessed be the Lord, The God of Israel;
+He has come to His people and set them free.
+
+He has raised up for us a mighty Saviour,
+Born of the house of His servant David.
+
+Through His holy prophets He promised of old
+That He would save us from our enemies,
+From the hands of all who hate us.
+
+He promised to show mercy to our fathers
+And to remember His holy Covenant.
+
+This was the oath He swore to our father Abraham:
+To set us free from the hands of our enemies,
+Free to worship Him without fear,
+Holy and righteous in His sight
+All the days of our life.
+
+You, My child shall be called
+The prophet of the Most High,
+For you will go before the Lord to prepare His way,
+To give his people knowledge of salvation
+By the forgiveness of their sins.
+
+In the tender compassion of our Lord
+The dawn from on high shall break upon us,
+to shine on those who dwell in darkness
+And the shadow of death,
+And to guide our feet into the way of peace.
+
+Glory to the Father,
+and to the Son,
+and to the Holy Spirit.
+As it was in the beginning.
+is now, and will be forever.
+
+Amen.`;
+---
+
+<Layout title={pageTitle}>
+	<section class="hero prayerHero">
+		<p class="kicker prayerKicker">Morning Prayer · Roman Rite · Europe/Rome</p>
+		<h1 class="title prayerTitle">{pageTitle}</h1>
+		<p class="muted prayerMeta">{daily.dateLabel}</p>
+		<p class="muted prayerMeta">Saint of the day: {daily.saintOfTheDay}</p>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Opening</p>
+		<div class="prayerCard">
+			<p class="prayerText">In the name of the Father and of the Son and of the Holy Spirit</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Invocation of the Holy Spirit</p>
+		<div class="prayerCard">
+			<p class="prayerText">Come Holy Spirit, fill the hearts of your faithful
+And kindle in them the fire of your love.</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<div class="pauseCard" data-timer-seconds="60">
+			<div class="sectionHead">
+				<div class="sectionHeadText">
+					<p class="rubric">Silence - we will keep the time for you</p>
+					<h2 class="sectionTitle prayerHeading">
+						Let us remember we are in the holy presence of God.
+					</h2>
+				</div>
+				<button class="prayerButton timerButton" type="button">Start 1 minute</button>
+			</div>
+			<p class="timerMessage muted" aria-live="polite">
+				Take one minute of silence now, praying for God's blessing on you, your family, fraternity, and all Exodus men.
+			</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<div class="sectionHead">
+			<div class="sectionHeadText">
+				<p class="rubric">Today</p>
+				<h2 class="sectionTitle prayerHeading">Psalm of the day</h2>
+				<p class="muted liveMeta">{daily.psalm.reference}</p>
+				{daily.psalm.mode === "mass-fallback" && (
+					<p class="muted liveMeta">
+						Currently using the Mass responsorial psalm as a chantable fallback.
+					</p>
+				)}
+			</div>
+
+			<button
+				class="prayerButton toneButton"
+				type="button"
+				data-audio-target="psalm-tone-audio"
+				data-default-label="Help to sing the tone if you like"
+			>
+				Help to sing the tone if you like
+			</button>
+		</div>
+
+		<audio id="psalm-tone-audio" preload="none" src="/audio/tone8.mp3"></audio>
+
+		<div class="prayerCard">
+			<p class="prayerText">{daily.psalm.display_text}</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Today</p>
+		<h2 class="sectionTitle prayerHeading">Gospel of the day</h2>
+		<p class="muted liveMeta">{daily.gospel.reference}</p>
+
+		<div class="prayerCard">
+			<p class="prayerText">{daily.gospel.text}</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Kyrie</p>
+		<div class="prayerCard stackTight">
+			<p class="callResponseLine">
+				<span>Lord have mercy</span>
+				<span>Kyrie eleison</span>
+			</p>
+			<p class="callResponseLine">
+				<span>Christ have mercy</span>
+				<span>Christe eleison</span>
+			</p>
+			<p class="callResponseLine">
+				<span>Lord have mercy</span>
+				<span>Kyrie eleison</span>
+			</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Saint invocations</p>
+		<div class="prayerCard">
+			<ul class="invocationList">
+				{saintInvocations.map((name) => (
+					<li>
+						<p class="invocationName">{name}</p>
+						<p class="invocationResponse">{saintResponse}</p>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Petitions</p>
+		<div class="prayerCard">
+			<ul class="petitionList">
+				{petitions.map((item) => (
+					<li>{item}</li>
+				))}
+			</ul>
+			<p class="personalPetition">Bring your personal petitions to the Lord</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Our Father</p>
+		<div class="prayerCard">
+			<p class="prayerText">Our Father, Who art in heaven,
+hallowed be Thy Name.
+Thy kingdom come.
+Thy will be done on earth, as it is in heaven.
+Give us this day our daily bread,
+and forgive us our trespasses,
+as we forgive those who trespass against us,
+and lead us not into temptation,
+but deliver us from evil.
+Amen.</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Morning Offering</p>
+		<h2 class="sectionTitle prayerHeading">Choose one as you go</h2>
+
+		<div class="optionsGrid">
+			{morningOfferings.map((option) => (
+				<article class="optionCard">
+					<p class="optionLabel">{option.label}</p>
+					<p class="prayerText">{option.text}</p>
+				</article>
+			))}
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<div class="pauseCard" data-timer-seconds="300">
+			<div class="sectionHead">
+				<div class="sectionHeadText">
+					<p class="rubric">Silent contemplation</p>
+					<h2 class="sectionTitle prayerHeading">Five minutes</h2>
+				</div>
+				<button class="prayerButton timerButton" type="button">Start 5 minutes</button>
+			</div>
+			<p class="timerMessage muted" aria-live="polite">Open your heart to Jesus.
+Let yourself become fully his.
+
+Allow him to heal what is wounded in you,
+to receive your hopes,
+and to shape them according to his will.
+
+Rest in the quiet,
+and come to know how deeply he knows you
+and how completely he loves and accepts you.</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<div class="sectionHead">
+			<div class="sectionHeadText">
+				<p class="rubric">Canticle</p>
+				<h2 class="sectionTitle prayerHeading">Benedictus</h2>
+			</div>
+
+			<button
+				class="prayerButton toneButton"
+				type="button"
+				data-audio-target="benedictus-tone-audio"
+				data-default-label="Help to sing the tone if you like"
+			>
+				Help to sing the tone if you like
+			</button>
+		</div>
+
+		<audio id="benedictus-tone-audio" preload="none" src="/audio/tone8.mp3"></audio>
+
+		<div class="prayerCard">
+			<p class="prayerText benedictusText">{benedictusText}</p>
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Closing prayer</p>
+		<div class="optionsGrid">
+			{closingPrayerOptions.map((text) => (
+				<article class="optionCard">
+					<p class="prayerText">{text}</p>
+				</article>
+			))}
+		</div>
+	</section>
+
+	<section class="section prayerSection">
+		<p class="rubric">Closing verse</p>
+		<div class="prayerCard">
+			<p class="prayerText">May the divine assistance + remain always with us.
+℟. Amen.
+
+And may the souls of the faithful departed
+through the mercy of God
+rest in peace.
+℟. Amen.</p>
+		</div>
+	</section>
+
+	<script is:inline>
+		function initMorningPrayerPage() {
+			const timerCards = document.querySelectorAll('[data-timer-seconds]');
+			const toneButtons = document.querySelectorAll('.toneButton');
+			let audioContext;
+
+			function ensureAudioContext() {
+				if (!audioContext) {
+					const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+					if (AudioContextClass) audioContext = new AudioContextClass();
+				}
+				if (audioContext && audioContext.state === 'suspended') {
+					audioContext.resume();
+				}
+				return audioContext;
+			}
+
+			function ringBell() {
+				const ctx = ensureAudioContext();
+				if (!ctx) return;
+
+				const now = ctx.currentTime;
+				const master = ctx.createGain();
+				master.gain.setValueAtTime(0.0001, now);
+				master.gain.exponentialRampToValueAtTime(0.22, now + 0.02);
+				master.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
+				master.connect(ctx.destination);
+
+				const partials = [
+					{ freq: 587.33, start: now, end: now + 3.0 },
+					{ freq: 880.0, start: now + 0.03, end: now + 2.6 },
+					{ freq: 1174.66, start: now + 0.06, end: now + 2.2 },
+				];
+
+				partials.forEach((partial) => {
+					const osc = ctx.createOscillator();
+					const gain = ctx.createGain();
+
+					osc.type = 'sine';
+					osc.frequency.setValueAtTime(partial.freq, partial.start);
+
+					gain.gain.setValueAtTime(0.0001, partial.start);
+					gain.gain.exponentialRampToValueAtTime(0.18, partial.start + 0.03);
+					gain.gain.exponentialRampToValueAtTime(0.0001, partial.end);
+
+					osc.connect(gain);
+					gain.connect(master);
+					osc.start(partial.start);
+					osc.stop(partial.end);
+				});
+			}
+
+			timerCards.forEach((card) => {
+				if (card.dataset.bound === 'true') return;
+				card.dataset.bound = 'true';
+
+				const seconds = Number(card.dataset.timerSeconds || '0');
+				const button = card.querySelector('.timerButton');
+
+				if (!button || !seconds) return;
+
+				button.addEventListener('click', () => {
+					if (button.disabled) return;
+
+					ensureAudioContext();
+					button.disabled = true;
+					button.textContent = 'Timer running';
+
+					window.setTimeout(() => {
+						ringBell();
+						button.disabled = false;
+						button.textContent = seconds === 60 ? 'Start 1 minute' : 'Start 5 minutes';
+					}, seconds * 1000);
+				});
+			});
+
+			toneButtons.forEach((button) => {
+				if (button.dataset.bound === 'true') return;
+				button.dataset.bound = 'true';
+
+				const targetId = button.dataset.audioTarget;
+				const defaultLabel = button.dataset.defaultLabel || 'Play tone';
+				const audio = targetId ? document.getElementById(targetId) : null;
+
+				if (!audio) return;
+
+				button.addEventListener('click', async () => {
+					const allAudio = document.querySelectorAll('audio');
+
+					allAudio.forEach((item) => {
+						if (item !== audio) {
+							item.pause();
+							item.currentTime = 0;
+						}
+					});
+
+					toneButtons.forEach((otherButton) => {
+						if (otherButton !== button) {
+							otherButton.textContent = otherButton.dataset.defaultLabel || 'Play tone';
+						}
+					});
+
+					if (!audio.paused) {
+						audio.pause();
+						audio.currentTime = 0;
+						button.textContent = defaultLabel;
+						return;
+					}
+
+					try {
+						await audio.play();
+						button.textContent = 'Stop tone';
+					} catch {
+						button.textContent = 'Add /audio/tone8.mp3 to enable';
+					}
+				});
+
+				audio.addEventListener('ended', () => {
+					button.textContent = defaultLabel;
+				});
+			});
+		}
+
+		initMorningPrayerPage();
+		document.addEventListener('astro:page-load', initMorningPrayerPage);
+	</script>
+</Layout>
+
+<style>
+	:root {
+		--prayer-heading: #8a3a3a;
+	}
+
+	.prayerHero {
+		margin-bottom: var(--space-xl);
+	}
+
+	.prayerTitle,
+	.prayerHeading,
+	.rubric,
+	.optionLabel {
+		color: var(--prayer-heading);
+	}
+
+	.prayerSection {
+		display: grid;
+		gap: var(--space-sm);
+	}
+
+	.prayerMeta,
+	.liveMeta {
+		margin: 0;
+	}
+
+	.rubric {
+		font-size: var(--font-size-xs);
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		margin: 0;
+	}
+
+	.sectionTitle.prayerHeading,
+	.prayerTitle {
+		margin-bottom: 0;
+	}
+
+	.sectionHead {
+		display: flex;
+		gap: var(--space-md);
+		align-items: flex-start;
+		justify-content: space-between;
+		flex-wrap: wrap;
+	}
+
+	.sectionHeadText {
+		display: grid;
+		gap: var(--space-xs);
+		min-width: 0;
+		flex: 1 1 320px;
+	}
+
+	.prayerCard,
+	.optionCard,
+	.pauseCard {
+		box-sizing: border-box;
+		width: 100%;
+		background: var(--bg-elevated);
+		border: 1px solid var(--border);
+		border-radius: 18px;
+		padding: var(--space-lg);
+		overflow: hidden;
+	}
+
+	.prayerText {
+		white-space: pre-line;
+		color: var(--muted);
+		margin: 0;
+	}
+
+	.stackTight {
+		display: grid;
+		gap: var(--space-sm);
+	}
+
+	.callResponseLine {
+		display: flex;
+		justify-content: space-between;
+		gap: var(--space-md);
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.invocationList,
+	.petitionList {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: var(--space-md);
+	}
+
+	.invocationName,
+	.invocationResponse {
+		margin: 0;
+	}
+
+	.invocationName {
+		color: var(--text);
+	}
+
+	.invocationResponse {
+		color: var(--muted);
+	}
+
+	.petitionList li,
+	.personalPetition {
+		color: var(--muted);
+		margin: 0;
+	}
+
+	.personalPetition {
+		margin-top: var(--space-lg);
+		font-style: italic;
+	}
+
+	.optionsGrid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-md);
+		align-items: start;
+		margin-top: var(--space-xs);
+	}
+
+	.optionCard {
+		display: grid;
+		gap: var(--space-sm);
+		align-content: start;
+		height: 100%;
+	}
+
+	.optionLabel {
+		font-family: var(--font-serif);
+		font-size: var(--font-size-lg);
+		margin: 0;
+	}
+
+	.prayerButton {
+		appearance: none;
+		border: 1px solid var(--border);
+		background: var(--bg);
+		color: var(--text);
+		border-radius: 999px;
+		padding: 0.6rem 0.95rem;
+		font-family: var(--font-sans);
+		font-size: var(--font-size-sm);
+		line-height: var(--leading-tight);
+		cursor: pointer;
+		flex: 0 0 auto;
+	}
+
+	.prayerButton:hover,
+	.prayerButton:focus-visible {
+		border-color: var(--prayer-heading);
+		color: var(--prayer-heading);
+		outline: none;
+	}
+
+	.prayerButton:disabled {
+		cursor: default;
+		opacity: 0.8;
+	}
+
+	.timerMessage {
+		margin: var(--space-sm) 0 0;
+	}
+
+	.benedictusText {
+		font-size: var(--font-size-lg);
+		line-height: var(--leading-relaxed);
+	}
+
+	@media (max-width: 720px) {
+		.optionsGrid {
+			grid-template-columns: 1fr;
+		}
+	}
+    /* ===== Mobile polish ===== */
+@media (max-width: 900px) {
+	.page {
+		padding-left: 0.9rem;
+		padding-right: 0.9rem;
+		padding-bottom: calc(var(--space-3xl) + 5.5rem);
+	}
+
+	.sectionHead {
+		align-items: stretch;
+	}
+
+	.sectionHeadText {
+		flex-basis: 100%;
+	}
+
+	.prayerButton {
+		align-self: flex-start;
+	}
+}
+
+@media (max-width: 720px) {
+	.prayerHero {
+		margin-bottom: var(--space-lg);
+	}
+
+	.prayerTitle {
+		font-size: clamp(2.1rem, 8vw, 2.7rem);
+		line-height: 1.1;
+	}
+
+	.sectionTitle.prayerHeading {
+		font-size: clamp(1.25rem, 5.5vw, 1.5rem);
+		line-height: 1.2;
+	}
+
+	.prayerSection {
+		gap: 0.6rem;
+	}
+
+	.section {
+		margin-top: var(--space-lg);
+	}
+
+	.prayerCard,
+	.optionCard,
+	.pauseCard {
+		padding: 1rem;
+		border-radius: 16px;
+	}
+
+	.optionsGrid {
+		grid-template-columns: 1fr;
+		gap: 0.85rem;
+	}
+
+	.sectionHead {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.85rem;
+	}
+
+	.prayerButton {
+		width: 100%;
+		justify-content: center;
+		min-height: 46px;
+	}
+
+	.callResponseLine {
+		flex-direction: column;
+		gap: 0.2rem;
+	}
+
+	.prayerText,
+	.invocationName,
+	.invocationResponse,
+	.petitionList li,
+	.personalPetition,
+	.callResponseLine {
+		font-size: 0.98rem;
+		line-height: 1.72;
+	}
+
+	.benedictusText {
+		font-size: 1.02rem;
+		line-height: 1.75;
+	}
+
+	.rubric {
+		line-height: 1.4;
+		letter-spacing: 0.08em;
+	}
+
+	.liveMeta,
+	.prayerMeta {
+		font-size: 0.92rem;
+		line-height: 1.55;
+	}
+
+	.dock {
+		bottom: 1rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.page {
+		padding-left: 0.8rem;
+		padding-right: 0.8rem;
+		padding-bottom: calc(var(--space-3xl) + 6rem);
+	}
+
+	.prayerTitle {
+		font-size: clamp(1.9rem, 9vw, 2.3rem);
+	}
+
+	.sectionTitle.prayerHeading {
+		font-size: 1.2rem;
+	}
+
+	.prayerCard,
+	.optionCard,
+	.pauseCard {
+		padding: 0.9rem;
+	}
+
+	.prayerText,
+	.invocationName,
+	.invocationResponse,
+	.petitionList li,
+	.personalPetition,
+	.benedictusText {
+		overflow-wrap: break-word;
+		word-break: normal;
+		hyphens: auto;
+	}
+
+	.optionLabel {
+		font-size: 1.15rem;
+	}
+
+	.timerMessage {
+		line-height: 1.7;
+	}
+}
+
+/* Better tap behavior on phones */
+@media (hover: none) and (pointer: coarse) {
+	.prayerButton,
+	.dockBtn {
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+	}
+}
+</style>
