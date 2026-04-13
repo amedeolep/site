@@ -2,63 +2,19 @@
 export const prerender = false;
 
 import Layout from "../layouts/Layout.astro";
+import { getDailyPayload, getFallbackDailyPayload, type DailyPayload } from "../lib/daily";
 
 const pageTitle = "Amedeo's Morning Prayer";
 
-type DailyData = {
-	dateLabel: string;
-	saintOfTheDay: string;
-	psalm: {
-		reference: string;
-		raw_refrain: string;
-		verses: string[];
-		display_text: string;
-		mode: "mass-fallback" | "placeholder";
-	};
-	gospel: {
-		reference: string;
-		text: string;
-	};
-};
-
-const fallbackDaily: DailyData = {
-	dateLabel: new Intl.DateTimeFormat("en-GB", {
-		timeZone: "Europe/Rome",
-		weekday: "long",
-		day: "numeric",
-		month: "long",
-		year: "numeric",
-	}).format(new Date()),
-	saintOfTheDay: "Saint N.",
-	psalm: {
-		reference: "Psalm of the day",
-		raw_refrain: "",
-		verses: [],
-		display_text: "Psalm unavailable right now.",
-		mode: "placeholder",
-	},
-	gospel: {
-		reference: "Gospel of the day",
-		text: "Gospel unavailable right now.",
-	},
-};
-
-let daily: DailyData = fallbackDaily;
+let daily: DailyData = getFallbackDailyPayload();
 
 try {
-	const apiUrl = new URL("/api/daily", Astro.url);
-	const response = await fetch(apiUrl, {
-		headers: {
-			accept: "application/json",
-		},
-	});
-
-	if (response.ok) {
-		daily = (await response.json()) as DailyData;
-	}
+	daily = await getDailyPayload();
 } catch {
-	daily = fallbackDaily;
+	daily = getFallbackDailyPayload();
 }
+
+type DailyData = DailyPayload;
 
 const saintResponse = "℟. Pray for us";
 
@@ -751,162 +707,155 @@ rest in peace.
 		line-height: var(--leading-relaxed);
 	}
 
-	@media (max-width: 720px) {
-		.optionsGrid {
-			grid-template-columns: 1fr;
+	@media (max-width: 900px) {
+		.page {
+			padding-left: 0.9rem;
+			padding-right: 0.9rem;
+			padding-bottom: calc(var(--space-3xl) + 5.5rem);
+		}
+
+		.sectionHead {
+			align-items: stretch;
+		}
+
+		.sectionHeadText {
+			flex-basis: 100%;
+		}
+
+		.prayerButton {
+			align-self: flex-start;
 		}
 	}
-    /* ===== Mobile polish ===== */
-@media (max-width: 900px) {
-	.page {
-		padding-left: 0.9rem;
-		padding-right: 0.9rem;
-		padding-bottom: calc(var(--space-3xl) + 5.5rem);
+
+	@media (max-width: 720px) {
+		.prayerHero {
+			margin-bottom: var(--space-lg);
+		}
+
+		.prayerTitle {
+			font-size: clamp(2.1rem, 8vw, 2.7rem);
+			line-height: 1.1;
+		}
+
+		.sectionTitle.prayerHeading {
+			font-size: clamp(1.25rem, 5.5vw, 1.5rem);
+			line-height: 1.2;
+		}
+
+		.prayerSection {
+			gap: 0.6rem;
+		}
+
+		.section {
+			margin-top: var(--space-lg);
+		}
+
+		.prayerCard,
+		.optionCard,
+		.pauseCard {
+			padding: 1rem;
+			border-radius: 16px;
+		}
+
+		.optionsGrid {
+			grid-template-columns: 1fr;
+			gap: 0.85rem;
+		}
+
+		.sectionHead {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 0.85rem;
+		}
+
+		.prayerButton {
+			width: 100%;
+			justify-content: center;
+			min-height: 46px;
+		}
+
+		.callResponseLine {
+			flex-direction: column;
+			gap: 0.2rem;
+		}
+
+		.prayerText,
+		.invocationName,
+		.invocationResponse,
+		.petitionList li,
+		.personalPetition,
+		.callResponseLine {
+			font-size: 0.98rem;
+			line-height: 1.72;
+		}
+
+		.benedictusText {
+			font-size: 1.02rem;
+			line-height: 1.75;
+		}
+
+		.rubric {
+			line-height: 1.4;
+			letter-spacing: 0.08em;
+		}
+
+		.liveMeta,
+		.prayerMeta {
+			font-size: 0.92rem;
+			line-height: 1.55;
+		}
+
+		.dock {
+			bottom: 1rem;
+		}
 	}
 
-	.sectionHead {
-		align-items: stretch;
+	@media (max-width: 480px) {
+		.page {
+			padding-left: 0.8rem;
+			padding-right: 0.8rem;
+			padding-bottom: calc(var(--space-3xl) + 6rem);
+		}
+
+		.prayerTitle {
+			font-size: clamp(1.9rem, 9vw, 2.3rem);
+		}
+
+		.sectionTitle.prayerHeading {
+			font-size: 1.2rem;
+		}
+
+		.prayerCard,
+		.optionCard,
+		.pauseCard {
+			padding: 0.9rem;
+		}
+
+		.prayerText,
+		.invocationName,
+		.invocationResponse,
+		.petitionList li,
+		.personalPetition,
+		.benedictusText {
+			overflow-wrap: break-word;
+			word-break: normal;
+			hyphens: auto;
+		}
+
+		.optionLabel {
+			font-size: 1.15rem;
+		}
+
+		.timerMessage {
+			line-height: 1.7;
+		}
 	}
 
-	.sectionHeadText {
-		flex-basis: 100%;
+	@media (hover: none) and (pointer: coarse) {
+		.prayerButton,
+		.dockBtn {
+			-webkit-tap-highlight-color: transparent;
+			touch-action: manipulation;
+		}
 	}
-
-	.prayerButton {
-		align-self: flex-start;
-	}
-}
-
-@media (max-width: 720px) {
-	.prayerHero {
-		margin-bottom: var(--space-lg);
-	}
-
-	.prayerTitle {
-		font-size: clamp(2.1rem, 8vw, 2.7rem);
-		line-height: 1.1;
-	}
-
-	.sectionTitle.prayerHeading {
-		font-size: clamp(1.25rem, 5.5vw, 1.5rem);
-		line-height: 1.2;
-	}
-
-	.prayerSection {
-		gap: 0.6rem;
-	}
-
-	.section {
-		margin-top: var(--space-lg);
-	}
-
-	.prayerCard,
-	.optionCard,
-	.pauseCard {
-		padding: 1rem;
-		border-radius: 16px;
-	}
-
-	.optionsGrid {
-		grid-template-columns: 1fr;
-		gap: 0.85rem;
-	}
-
-	.sectionHead {
-		flex-direction: column;
-		align-items: stretch;
-		gap: 0.85rem;
-	}
-
-	.prayerButton {
-		width: 100%;
-		justify-content: center;
-		min-height: 46px;
-	}
-
-	.callResponseLine {
-		flex-direction: column;
-		gap: 0.2rem;
-	}
-
-	.prayerText,
-	.invocationName,
-	.invocationResponse,
-	.petitionList li,
-	.personalPetition,
-	.callResponseLine {
-		font-size: 0.98rem;
-		line-height: 1.72;
-	}
-
-	.benedictusText {
-		font-size: 1.02rem;
-		line-height: 1.75;
-	}
-
-	.rubric {
-		line-height: 1.4;
-		letter-spacing: 0.08em;
-	}
-
-	.liveMeta,
-	.prayerMeta {
-		font-size: 0.92rem;
-		line-height: 1.55;
-	}
-
-	.dock {
-		bottom: 1rem;
-	}
-}
-
-@media (max-width: 480px) {
-	.page {
-		padding-left: 0.8rem;
-		padding-right: 0.8rem;
-		padding-bottom: calc(var(--space-3xl) + 6rem);
-	}
-
-	.prayerTitle {
-		font-size: clamp(1.9rem, 9vw, 2.3rem);
-	}
-
-	.sectionTitle.prayerHeading {
-		font-size: 1.2rem;
-	}
-
-	.prayerCard,
-	.optionCard,
-	.pauseCard {
-		padding: 0.9rem;
-	}
-
-	.prayerText,
-	.invocationName,
-	.invocationResponse,
-	.petitionList li,
-	.personalPetition,
-	.benedictusText {
-		overflow-wrap: break-word;
-		word-break: normal;
-		hyphens: auto;
-	}
-
-	.optionLabel {
-		font-size: 1.15rem;
-	}
-
-	.timerMessage {
-		line-height: 1.7;
-	}
-}
-
-/* Better tap behavior on phones */
-@media (hover: none) and (pointer: coarse) {
-	.prayerButton,
-	.dockBtn {
-		-webkit-tap-highlight-color: transparent;
-		touch-action: manipulation;
-	}
-}
 </style>
