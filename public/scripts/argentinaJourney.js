@@ -38,6 +38,7 @@ export function initArgentinaJourney() {
     photoIndex: 0,
     popupHover: false,
     hideTimer: null,
+    hoverShowTimer: null,
     lockRect: null,
     activeId: null,
 
@@ -69,6 +70,7 @@ export function initArgentinaJourney() {
     if (!popup) return { w: 0, h: 0 };
     const prevHidden = popup.hidden;
     popup.hidden = false;
+    requestAnimationFrame(() => popup.classList.add("isVisible"));
     const r = popup.getBoundingClientRect();
     popup.hidden = prevHidden;
     return { w: r.width, h: r.height };
@@ -167,6 +169,7 @@ export function initArgentinaJourney() {
 
   function hidePopupOnly() {
     if (!popup) return;
+    popup.classList.remove("isVisible");
     popup.hidden = true;
     state.hoverId = null;
     state.pinnedId = null;
@@ -178,7 +181,7 @@ export function initArgentinaJourney() {
     if (state.hideTimer) window.clearTimeout(state.hideTimer);
     state.hideTimer = window.setTimeout(() => {
       if (!state.pinnedId && !state.popupHover) hidePopupOnly();
-    }, 120);
+    }, 260);
   }
 
   function updateGallery() {
@@ -308,13 +311,17 @@ export function initArgentinaJourney() {
 
     pinEl.addEventListener("mouseenter", () => {
       if (state.pinnedId) return;
-      state.hoverId = id;
-      state.lockRect = pinEl.getBoundingClientRect();
-      showPopup(id, "hover", pinEl);
+      if (state.hoverShowTimer) window.clearTimeout(state.hoverShowTimer);
+      state.hoverShowTimer = window.setTimeout(() => {
+        state.hoverId = id;
+        state.lockRect = pinEl.getBoundingClientRect();
+        showPopup(id, "hover", pinEl);
+      }, 320);
     });
 
     pinEl.addEventListener("mouseleave", () => {
       if (state.pinnedId) return;
+      if (state.hoverShowTimer) window.clearTimeout(state.hoverShowTimer);
       scheduleHidePopup();
     });
 

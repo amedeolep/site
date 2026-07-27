@@ -1,5 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { featuredProjects } from "../data/featuredProjects.js";
+
+const featured = featuredProjects[Math.floor(Math.random() * featuredProjects.length)];
 ---
 
 <Layout title="Amedeo Leproni">
@@ -11,12 +14,13 @@ import Layout from "../layouts/Layout.astro";
       Scientist and engineer, curious explorer, respectful steward.
     </p>
 
-    <!-- Image: constrained to the same 720px gutter width -->
     <div class="contentNarrow">
       <figure class="heroImage">
         <img
-          src="/docs/me.png"
-          alt="me"
+          src="/docs/me.webp"
+          alt="Amedeo Leproni"
+          width="1200"
+          height="900"
           loading="eager"
           decoding="async"
         />
@@ -24,7 +28,7 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </header>
 
-  <section aria-label="About" class="section">
+  <section aria-label="About" class="section reveal">
     <h2 class="sectionTitle">About.</h2>
     <p>
       <strong>Currently</strong> Founder in Residence at Entrepreneurs First, building rapid microbial contamination tests
@@ -46,7 +50,29 @@ import Layout from "../layouts/Layout.astro";
     </p>
   </section>
 
-  <section aria-label="Fascinations" class="section">
+  <section aria-label="Featured project" class="section reveal">
+    <h2 class="sectionTitle">Featured project.</h2>
+    <a href={featured.href} class="featuredCard">
+      <figure class="featuredThumb">
+        <img
+          src={featured.thumbnail}
+          data-fallback={featured.fallbackThumbnail}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onerror="if(this.dataset.fallback && this.src !== new URL(this.dataset.fallback, location.href).href){this.src=this.dataset.fallback}else{this.onerror=null}"
+        />
+      </figure>
+      <div class="featuredBody">
+        <p class="featuredCategory">{featured.category}</p>
+        <h2 class="featuredTitle">{featured.title}</h2>
+        <p class="featuredBlurb">{featured.blurb}</p>
+        <span class="featuredCta">Read the project →</span>
+      </div>
+    </a>
+  </section>
+
+  <section aria-label="Fascinations" class="section reveal">
     <h2 class="sectionTitle">Fascinations.</h2>
     <ul class="list">
       <li><strong>Molecular biology</strong>, nature’s engineering magnum opus, humbling and inspiring human ingenuity.</li>
@@ -58,7 +84,7 @@ import Layout from "../layouts/Layout.astro";
     </ul>
   </section>
 
-  <section aria-label="Projects" class="section">
+  <section aria-label="Contact" class="section reveal">
     <h2 class="sectionTitle">Contact.</h2>
 
     <details class="contactDetails">
@@ -85,35 +111,111 @@ import Layout from "../layouts/Layout.astro";
   </section>
 
   <style>
-    /* Constrain to your Layout width */
     .contentNarrow {
       max-width: 720px;
       width: 100%;
       margin: 0 auto;
     }
 
-/* Round corners on the container and keep it centred */
-.heroImage {
-  margin: 0 auto;
-  width: 100%;
-  max-width: 520px; /* tweak smaller or larger */
-  overflow: hidden;
-  border-radius: 16px;
-}
+    .heroImage {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 520px;
+      overflow: hidden;
+      border-radius: 16px;
+    }
 
-/* Make image fill the smaller container */
-.heroImage img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
+    .heroImage img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
 
-    /* Light mode header ink */
+    .featuredCard {
+      display: grid;
+      grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+      gap: 1.25rem;
+      align-items: stretch;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg-elevated);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .featuredCard:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    html[data-theme="dark"] .featuredCard:hover {
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .featuredThumb {
+      margin: 0;
+      overflow: hidden;
+      border-radius: 10px;
+      aspect-ratio: 4 / 3;
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .featuredThumb img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .featuredBody {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .featuredCategory {
+      margin: 0 0 0.35rem;
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .featuredTitle {
+      margin: 0 0 0.5rem;
+      font-family: var(--font-serif);
+      font-size: var(--font-size-xl);
+      line-height: var(--leading-tight);
+      color: var(--text);
+    }
+
+    .featuredBlurb {
+      margin: 0 0 0.85rem;
+      flex: 1;
+    }
+
+    .featuredCta {
+      font-size: var(--font-size-sm);
+      color: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      .featuredCard {
+        grid-template-columns: 1fr;
+      }
+
+      .featuredThumb {
+        max-height: 200px;
+      }
+    }
+
     .sectionTitle {
       color: #8a3a3a;
     }
 
-    /* Night mode: muted yellow headers */
     :global(html.dark) .sectionTitle,
     :global(html.night) .sectionTitle,
     :global(html[data-theme="dark"]) .sectionTitle,

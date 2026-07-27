@@ -7,13 +7,13 @@ export const tierraDelFuego = {
 
   preview: {
     image: "/docs/argentina/tierra-del-fuego/1.JPG",
-    blurb: "3-weeks exploring beaches, parties, and polo fields.",
+    blurb: "2 weeks of hiking with dad",
   },
 
   gallery: [
     {
       image: "/docs/argentina/tierra-del-fuego/1.JPG",
-      caption: "A big rock.",
+      caption: "",
     },
     {
       image: "/docs/argentina/tierra-del-fuego/2.JPG",
@@ -21,46 +21,6 @@ export const tierraDelFuego = {
     },
     {
       image: "/docs/argentina/tierra-del-fuego/3.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/4.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/5.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/6.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/7.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/8.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/9.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/10.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/11.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/12.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/tierra-del-fuego/13.JPG",
       caption: "",
     },
   ],

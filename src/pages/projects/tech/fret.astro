@@ -1,21 +1,23 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import PdfStack from "../../../components/PdfStack.astro";
+import ExploreNext from "../../../components/ExploreNext.astro";
 ---
 
 
 <Layout title="MPhil Lab Course">
-  <header class="hero">
+  <header class="hero reveal">
     <a href="/projects" class="backLink">← Projects</a>
     <h1 class="title">MPhil Practical Lab Course <br /> CEB, Cambridge</h1>
     <p class="lede">This page outlines my work building and testing a fluorescent calcium sensor, from protein production and in vitro calibration to functional measurements in living animal cells using fluorescence lifetime imaging.</p>
   </header>
 
 
-  <section class="section">
+  <section class="section reveal">
     <h2 class="sectionTitle">Project Report</h2>
     <PdfStack src="/docs/fret.pdf" ariaLabel="fret dissertation PDF" />
   </section>
+  <ExploreNext currentHref="/projects/tech/fret" />
 
   <style>
     .backLink {

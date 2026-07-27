@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
+import ExploreNext from "../../../components/ExploreNext.astro";
 import diaryText from "./diary.txt?raw";
 
 import { puntaDelEste } from "../../../data/argentina/punta-del-este.js";
@@ -21,6 +22,38 @@ const paragraphs = diaryText
 const first = paragraphs[0] ?? "";
 const rest = paragraphs.slice(1);
 
+const readingParagraphs = rest.flatMap((block) =>
+  block
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .flatMap((line) => {
+      if (line.length < 360) return [line];
+
+      const sentences = line.match(/[^.!?]+(?:[.!?]+[”’"']?|$)/g) ?? [line];
+      const groups = [];
+      let group = "";
+
+      for (const sentence of sentences) {
+        const next = `${group} ${sentence.trim()}`.trim();
+        if (group && next.length > 330) {
+          groups.push(group);
+          group = sentence.trim();
+        } else {
+          group = next;
+        }
+      }
+
+      if (group) groups.push(group);
+      return groups;
+    })
+);
+
+const openingSentences = (readingParagraphs[0]?.match(/[^.!?]+[.!?]+(?:\s|$)/g) ?? [])
+  .slice(0, 2)
+  .join(" ")
+  .trim();
+
 // Journey locations
 const locations = [
   puntaDelEste,
@@ -32,7 +65,9 @@ const locations = [
   tierraDelFuego,
   saltaYJujuy,
   iguazu,
-];
+].filter((location) =>
+  location.gallery?.some((photo) => photo.image !== "/docs/argentina/placeholder.png")
+);
 
 // Map lat/lng to percent positions
 const minLatP = -57.5;
@@ -57,7 +92,7 @@ const pins = locations.map((l) => {
 ---
 
 <Layout title="Argentina">
-  <header class="hero">
+  <header class="hero reveal argentinaPageItem">
     <a href="/projects" class="backLink">← Projects</a>
     <h1 class="title">Argentina.</h1>
     <p class="lede">A 9-month journey, a people who welcomed me like their own, and a total embrace of what adventures came to me.</p>
@@ -80,21 +115,23 @@ const pins = locations.map((l) => {
     </figure>
   </header>
 
-  <section class="section">
-    <h2 class="sectionTitle">Arrival: diary entry 19/10/2024</h2>
+  <section class="section reveal diarySection" id="diaryReader">
+    <p class="invitationKicker">From the diary</p>
+    <h2 class="sectionTitle">First day on the estancia.</h2>
 
     <div class="diary">
-      {first && <p class="para">{first}</p>}
+      {first && <p class="diaryDate">{first}</p>}
+      {openingSentences && <p class="diaryTeaser">{openingSentences}</p>}
 
       {rest.length > 0 && (
         <details class="more">
           <summary class="toggle">
-            <span class="labelClosed">Read more</span>
-            <span class="labelOpen">Read less</span>
+            <span class="labelClosed">Continue reading →</span>
+            <span class="labelOpen">Close the reader</span>
           </summary>
 
           <div class="rest">
-            {rest.map((p) => (
+            {readingParagraphs.map((p) => (
               <p class="para">{p}</p>
             ))}
           </div>
@@ -105,11 +142,26 @@ const pins = locations.map((l) => {
 
   <script type="module" src="/scripts/argentinaJourney.js"></script>
 
-  <section class="section journeySection">
-    <h2 class="sectionTitle">The journey</h2>
-    <p class="journeyHint">Follow my travels around the Argentine. (hover to preview, click to pin, open the gallery) <br> Shot on Ilford Pan 100 black and white film. </p>
+  <section class="section journeySection reveal" id="journeySection">
+    <div class="journeyInvitation">
+      <p class="invitationKicker">An interactive photo essay</p>
+      <h2 class="sectionTitle">Follow the journey.</h2>
+      <p>Travel across Argentina and Uruguay through an interactive map and photographs shot on Ilford Pan 100 black-and-white film.</p>
+      <button class="enterButton" id="journeyToggle" type="button" aria-expanded="false" aria-controls="journeyExperience">
+        Enter the journey →
+      </button>
+    </div>
 
-    <div id="journeyRoot" class="journeyWrap">
+    <div id="journeyExperience" class="journeyExperience" hidden>
+      <div class="journeyExperienceHead">
+        <div>
+          <p class="invitationKicker">The journey</p>
+          <p class="journeyHint">Pause over a location for a preview. Select it to keep it open and enter its gallery.</p>
+        </div>
+        <button class="leaveButton" id="journeyClose" type="button">Leave journey</button>
+      </div>
+
+      <div id="journeyRoot" class="journeyWrap">
       <div id="journeyMapFrame" class="journeyMapFrame">
         <img
           src="/docs/argentina/map.png"
@@ -233,15 +285,116 @@ const pins = locations.map((l) => {
         </div>
       </div>
 
-      <script type="application/json" id="journeyData" set:html={JSON.stringify(pins)}></script>
+        <script type="application/json" id="journeyData" set:html={JSON.stringify(pins)}></script>
+      </div>
     </div>
   </section>
 
-  <section class="section after">
+  <section class="section after reveal argentinaPageItem">
     <h2 class="sectionTitle">Afterword</h2>
-    <p class="journeyHint">"Los hermanos sean unidos &nbsp; porque ésa es la ley primera;<br>Tengan unión verdadera &nbsp; en cualquier tiempo que sea,<br>Porque si entre ellos se pelean &nbsp; los devoran los de afuera." <br> <br>  - Martín Fierro, 1872</p>
-    <p class="journeyHint">Travelling has shown me that with an open, unassuming heart (and while keeping your wits about you), a stranger may become a dear, lifelong friend. Gracias a todos ustedes, queridos amigos, que me dieron la bienvenida y me hicieron sentir en casa.</p>
+    <p>Travelling has shown me that with an open, unassuming heart (and while keeping your wits about you), a stranger may become a dear, lifelong friend. Gracias a ustedes, queridos amigos, que me dieron la bienvenida y me hicieron sentir en casa.</p>
+    <blockquote class="afterwordPoem">
+      <p>
+        “Los hermanos sean unidos &nbsp; porque ésa es la ley primera;<br />
+        Tengan unión verdadera &nbsp; en cualquier tiempo que sea,<br />
+        Porque si entre ellos se pelean &nbsp; los devoran los de afuera.”
+      </p>
+      <footer>– Martín Fierro, 1872</footer>
+    </blockquote>
   </section>
+  <ExploreNext currentHref="/projects/adventure/argentina" />
+
+  <script is:inline>
+    function initArgentinaFocusModes() {
+      const diarySection = document.getElementById("diaryReader");
+      const diaryDetails = diarySection?.querySelector("details.more");
+      const journeySection = document.getElementById("journeySection");
+      const journeyToggle = document.getElementById("journeyToggle");
+      const journeyClose = document.getElementById("journeyClose");
+      const journeyExperience = document.getElementById("journeyExperience");
+
+      if (!diarySection || !diaryDetails || !journeySection || !journeyToggle || !journeyClose || !journeyExperience) return;
+      if (diarySection.dataset.focusBound === "true") return;
+      diarySection.dataset.focusBound = "true";
+
+      let diaryInReadingZone = false;
+      let journeyInReadingZone = false;
+
+      function syncFocus() {
+        let focus = "";
+        if (diaryDetails.open && diaryInReadingZone) focus = "diary";
+        if (!journeyExperience.hidden && journeyInReadingZone) focus = "journey";
+
+        if (focus) document.documentElement.dataset.argentinaFocus = focus;
+        else delete document.documentElement.dataset.argentinaFocus;
+      }
+
+      function closeJourney() {
+        journeyExperience.hidden = true;
+        journeySection.classList.remove("isExploring");
+        journeyToggle.setAttribute("aria-expanded", "false");
+        syncFocus();
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.target === diarySection) diaryInReadingZone = entry.isIntersecting;
+          if (entry.target === journeySection) journeyInReadingZone = entry.isIntersecting;
+
+          const hasScrolledPast = entry.boundingClientRect.bottom < window.innerHeight * 0.32;
+          if (entry.target === diarySection && !entry.isIntersecting && hasScrolledPast && diaryDetails.open) {
+            diaryDetails.open = false;
+          }
+          if (entry.target === journeySection && !entry.isIntersecting && hasScrolledPast && !journeyExperience.hidden) {
+            closeJourney();
+          }
+        }
+        syncFocus();
+      }, { rootMargin: "-30% 0px -18% 0px", threshold: 0.04 });
+
+      observer.observe(diarySection);
+      observer.observe(journeySection);
+
+      const closeReaderSooner = () => {
+        if (!diaryDetails.open) return;
+        if (diarySection.getBoundingClientRect().bottom < window.innerHeight * 0.52) {
+          diaryDetails.open = false;
+        }
+      };
+      window.addEventListener("scroll", closeReaderSooner, { passive: true });
+      document.addEventListener("astro:before-swap", () => {
+        window.removeEventListener("scroll", closeReaderSooner);
+      }, { once: true });
+
+      diaryDetails.addEventListener("toggle", () => {
+        diarySection.classList.toggle("isReading", diaryDetails.open);
+        syncFocus();
+        if (diaryDetails.open) {
+          requestAnimationFrame(() => diarySection.scrollIntoView({ behavior: "smooth", block: "start" }));
+        }
+      });
+
+      journeyToggle.addEventListener("click", () => {
+        journeyExperience.hidden = false;
+        journeySection.classList.add("isExploring");
+        journeyToggle.setAttribute("aria-expanded", "true");
+        syncFocus();
+        requestAnimationFrame(() => journeySection.scrollIntoView({ behavior: "smooth", block: "start" }));
+      });
+
+      journeyClose.addEventListener("click", () => {
+        closeJourney();
+        journeySection.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+
+      window.addEventListener("pagehide", () => {
+        delete document.documentElement.dataset.argentinaFocus;
+      }, { once: true });
+    }
+
+    initArgentinaFocusModes();
+    document.addEventListener("astro:page-load", initArgentinaFocusModes);
+  </script>
 
   <!-- Patch: click same pin again closes popup (does not break existing handlers) -->
   <script type="module" is:inline>
@@ -312,15 +465,42 @@ const pins = locations.map((l) => {
     .heroImage { margin: 1.5rem 0 0 0; width: 100%; }
     .heroImage img { display: block; width: 100%; height: auto; max-width: 100%; }
 
-    .diary { margin-top: 1.25rem; max-width: none; width: 100%; }
-    .para { margin: 0 0 1rem 0; line-height: 1.65; }
+    .invitationKicker {
+      margin: 0 0 0.35rem;
+      color: var(--accent);
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .diarySection,
+    .journeySection {
+      scroll-margin-top: 2rem;
+      transition: opacity 700ms ease, filter 700ms ease, background 700ms ease, box-shadow 700ms ease, padding 700ms ease;
+    }
+
+    .diary { margin: 1rem auto 0; max-width: 76ch; width: 100%; }
+    .diaryDate {
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+      font-size: var(--font-size-sm);
+      font-style: italic;
+    }
+    .diaryTeaser {
+      margin-bottom: 0.8rem;
+      font-size: 1.08rem;
+      line-height: 1.75;
+    }
+    .para { margin: 0 0 1.35rem 0; font-size: 1.08rem; line-height: 1.8; }
 
     .more { margin-top: 0.25rem; position: relative; }
     .toggle {
       cursor: pointer;
-      color: var(--muted);
-      font-size: var(--font-size-sm);
-      text-decoration: underline;
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      color: var(--accent);
+      font-size: var(--font-size-md);
       text-underline-offset: 0.2em;
       list-style: none;
     }
@@ -331,11 +511,85 @@ const pins = locations.map((l) => {
     details.more[open] .labelClosed { display: none; }
     details.more[open] .labelOpen { display: inline; }
 
-    .rest { margin-top: 1rem; }
+    .rest { margin-top: 1.5rem; }
+    details.more[open] + * { display: none; }
+    .diarySection.isReading {
+      width: min(980px, calc(100vw - 2rem));
+      margin-left: 50%;
+      padding: clamp(1.25rem, 4vw, 2.75rem);
+      transform: translateX(-50%);
+      box-sizing: border-box;
+      border-radius: 22px;
+      background: var(--bg-elevated);
+      box-shadow: 0 24px 70px rgba(40, 34, 23, 0.12);
+    }
+    .diarySection.isReading .diaryTeaser { display: none; }
+
+    .afterwordPoem {
+      margin: 2rem auto 0;
+      text-align: center;
+    }
+
+    .afterwordPoem p {
+      margin-bottom: 0.85rem;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    .afterwordPoem footer {
+      color: var(--muted);
+      font-size: var(--font-size-sm);
+    }
     details.more[open] .toggle { position: absolute; bottom: 0; left: 0; width: fit-content; }
     details.more[open] .rest { padding-bottom: 2.25rem; }
 
     .journeySection { margin-top: 2.5rem; }
+    .journeyInvitation {
+      padding: clamp(1.1rem, 3vw, 1.7rem);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--bg-elevated);
+    }
+    .journeyInvitation p:not(.invitationKicker) {
+      max-width: 58ch;
+      margin-top: 0.5rem;
+    }
+    .enterButton,
+    .leaveButton {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      cursor: pointer;
+      font: inherit;
+      padding: 0;
+    }
+    .enterButton {
+      min-height: 42px;
+      font-size: var(--font-size-md);
+    }
+    .enterButton:hover,
+    .leaveButton:hover { color: var(--text); }
+    .journeyExperience {
+      margin-top: 1.25rem;
+      padding: clamp(1rem, 3vw, 1.75rem);
+      border-radius: 22px;
+      background: var(--bg-elevated);
+      box-shadow: 0 24px 70px rgba(40, 34, 23, 0.12);
+    }
+    .journeyExperience[hidden] { display: none; }
+    .journeyExperienceHead {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+    .leaveButton {
+      flex: 0 0 auto;
+      min-height: 36px;
+      font-size: var(--font-size-sm);
+    }
+    .journeySection.isExploring .journeyInvitation { display: none; }
 
     /*
       Critical: lift the entire journey section above later sections and the dock.
@@ -440,8 +694,42 @@ const pins = locations.map((l) => {
       border-radius: 20px;
       box-shadow: 0 14px 40px rgba(0, 0, 0, 0.14);
       font-family: inherit;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 220ms ease, transform 220ms ease;
     }
     .journeyPopup[hidden] { display: none; }
+    .journeyPopup.isVisible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    :global(html[data-argentina-focus] .page > *) {
+      opacity: 0.08 !important;
+      filter: blur(2px);
+      transition: opacity 700ms ease, filter 700ms ease;
+    }
+    :global(html[data-argentina-focus="diary"] .page > .diarySection),
+    :global(html[data-argentina-focus="journey"] .page > .journeySection) {
+      opacity: 1 !important;
+      filter: none;
+    }
+    :global(html[data-argentina-focus] .dock) {
+      opacity: 0.16;
+      transition: opacity 700ms ease;
+    }
+
+    @media (max-width: 600px) {
+      .journeyExperienceHead {
+        display: block;
+      }
+      .leaveButton {
+        margin-bottom: 0.75rem;
+      }
+      .diarySection.isReading {
+        padding: 1.25rem;
+      }
+    }
 
     :global(html.dark) .journeyPopup,
     :global(html.night) .journeyPopup,

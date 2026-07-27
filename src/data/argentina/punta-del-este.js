@@ -34,33 +34,5 @@ export const puntaDelEste = {
       image: "/docs/argentina/punta-del-este/6.JPG",
       caption: "",
     },
-    {
-      image: "/docs/argentina/punta-del-este/7.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/punta-del-este/8.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/punta-del-este/9.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/punta-del-este/10.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/punta-del-este/11.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/punta-del-este/12.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/punta-del-este/13.JPG",
-      caption: "",
-    },
   ],
 };

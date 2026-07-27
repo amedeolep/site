@@ -3,11 +3,11 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Projects">
-	<header class="hero">
+	<header class="hero reveal">
 		<h1 class="title">Projects.</h1>
 	</header>
 
-	<section class="accordion" aria-label="Projects">
+	<section class="accordion reveal" aria-label="Projects">
 
 		<div class="item" data-state="closed">
 			<button class="trigger" type="button" aria-expanded="false" aria-controls="panel-journeys" id="trigger-journeys">
@@ -107,7 +107,14 @@ import Layout from '../layouts/Layout.astro';
 				<div class="panelInner">
 					<ul class="subList">
 						<li><div class="subRow"><span class="subTitle">Painting</span></div></li>
-						<li><div class="subRow"><span class="subTitle">Music</span></div></li>
+						<li>
+							<div class="subRow">
+								<a class="subWordLink" href="/projects/creative/choir">
+									<span class="subWordInner">Choir</span>
+								</a>
+								<span class="subRemainder">Semaine de la Voix &nbsp;&nbsp;&nbsp;&nbsp Hirson &nbsp;&nbsp;&nbsp;&nbsp Lourdes</span>
+							</div>
+						</li>
 						<li><div class="subRow"><span class="subTitle">Dancing</span></div></li>
 					</ul>
 				</div>

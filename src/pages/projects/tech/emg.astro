@@ -1,21 +1,23 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import PdfStack from "../../../components/PdfStack.astro";
+import ExploreNext from "../../../components/ExploreNext.astro";
 ---
 
 
 <Layout title="MPhil Dissertation">
-  <header class="hero">
+  <header class="hero reveal">
     <a href="/projects" class="backLink">← Projects</a>
     <h1 class="title">BEng Dissertation <br /> Dpt. EEE, UCL</h1>
     <p class="lede">This page outlines my work developing bespoke biosignal acquisition hardware to investigate the optimal placement of forearm electrodes, improving ML hand gesture classification.</p>
   </header>
 
 
-  <section class="section">
+  <section class="section reveal">
   		<h2 class="sectionTitle">Project Report</h2>
     <PdfStack src="/docs/emg.pdf" ariaLabel="emg dissertation PDF" />
   </section>
+  <ExploreNext currentHref="/projects/tech/emg" />
 
   <style>
     .backLink {

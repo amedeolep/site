@@ -7,13 +7,13 @@ export const sanMartinDeLosAndes = {
 
   preview: {
     image: "/docs/argentina/san-martin/1.JPG",
-    blurb: "3-weeks exploring beaches, parties, and polo fields.",
+    blurb: "Working as a waiter at Tipiliuke Lodge",
   },
 
   gallery: [
     {
       image: "/docs/argentina/san-martin/1.JPG",
-      caption: "A big rock.",
+      caption: "",
     },
     {
       image: "/docs/argentina/san-martin/2.JPG",
@@ -49,18 +49,6 @@ export const sanMartinDeLosAndes = {
     },
     {
       image: "/docs/argentina/san-martin/10.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/san-martin/11.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/san-martin/12.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/san-martin/13.JPG",
       caption: "",
     },
   ],

@@ -1,0 +1,111 @@
+---
+import { featuredProjects } from "../data/featuredProjects.js";
+
+const { currentHref } = Astro.props;
+const alternatives = featuredProjects.filter((project) => project.href !== currentHref);
+const nextProject = alternatives[Math.floor(Math.random() * alternatives.length)];
+---
+
+{nextProject && (
+  <section class="section reveal exploreNext" aria-label="Explore next">
+    <h2 class="sectionTitle">Explore next.</h2>
+    <a class="exploreCard" href={nextProject.href}>
+      <figure class="exploreThumb">
+        <img
+          src={nextProject.thumbnail}
+          data-fallback={nextProject.fallbackThumbnail}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onerror="if(this.dataset.fallback && this.src !== new URL(this.dataset.fallback, location.href).href){this.src=this.dataset.fallback}else{this.onerror=null}"
+        />
+      </figure>
+      <div class="exploreBody">
+        <p class="exploreCategory">{nextProject.category}</p>
+        <h3>{nextProject.title}</h3>
+        <p>{nextProject.blurb}</p>
+        <span>Open project →</span>
+      </div>
+    </a>
+  </section>
+)}
+
+<style>
+  .exploreNext {
+    padding-top: 0.5rem;
+  }
+
+  .exploreCard {
+    display: grid;
+    grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+    gap: 1.1rem;
+    padding: 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--bg-elevated);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .exploreCard:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  }
+
+  .exploreThumb {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    aspect-ratio: 4 / 3;
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .exploreThumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .exploreBody {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+  }
+
+  .exploreCategory {
+    margin: 0 0 0.3rem;
+    color: var(--accent);
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .exploreBody h3 {
+    margin: 0 0 0.35rem;
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-tight);
+  }
+
+  .exploreBody p:not(.exploreCategory) {
+    flex: 1;
+    margin-bottom: 0.6rem;
+  }
+
+  .exploreBody span {
+    color: var(--accent);
+    font-size: var(--font-size-sm);
+  }
+
+  @media (max-width: 560px) {
+    .exploreCard {
+      grid-template-columns: 1fr;
+    }
+
+    .exploreThumb {
+      max-height: 190px;
+    }
+  }
+</style>

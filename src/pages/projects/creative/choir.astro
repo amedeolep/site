@@ -1,0 +1,540 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import ExploreNext from "../../../components/ExploreNext.astro";
+
+const tracks = [
+  {
+    title: "Cantique de Jean Racine, Op. 11",
+    composer: "Gabriel Fauré",
+    duration: "6:22",
+    src: "/docs/choir/audio-tracks/Cantique de Jean Racine.m4a",
+  },
+  {
+    title: "Hymn to the Waters",
+    composer: "Gustav Holst",
+    duration: "1:52",
+    src: "/docs/choir/audio-tracks/Hymn of the Waters.m4a",
+  },
+  {
+    title: "Jupiter",
+    composer: "Gustav Holst",
+    duration: "8:08",
+    src: "/docs/choir/audio-tracks/Jupiter.m4a",
+  },
+  {
+    title: "Ave verum corpus, K. 618",
+    composer: "Wolfgang Amadeus Mozart",
+    duration: "2:31",
+    src: "/docs/choir/audio-tracks/Mozart Ave Verum.m4a",
+  },
+  {
+    title: "O Magnum Mysterium",
+    composer: "Morten Lauridsen",
+    duration: "6:10",
+    src: "/docs/choir/audio-tracks/O Magnum Mysterium.m4a",
+  },
+];
+---
+
+<Layout title="Choir">
+  <article id="choirProject">
+    <header class="hero reveal">
+      <a href="/projects#make" class="backLink">← Projects</a>
+      <p class="eyebrow">Create and Perform</p>
+      <h1 class="title">Choir.</h1>
+      <p class="lede">
+        Five performances from a summer of singing together — at the Semaine de la Voix in Hirson,
+        France, and on the Order of Malta International Pilgrimage to Lourdes.
+      </p>
+    </header>
+
+    <section class="playerSection reveal" aria-labelledby="recordingsTitle">
+      <div class="playerHeading">
+        <div>
+          <p class="eyebrow">Hirson · June 2026</p>
+          <h2 class="sectionTitle" id="recordingsTitle">The recordings.</h2>
+        </div>
+        <p class="playerStatus" id="playerStatus" aria-live="polite">Select a recording</p>
+      </div>
+
+      <div class="nowPlaying">
+        <button class="mainPlay" id="mainPlay" type="button" aria-label="Play Cantique de Jean Racine">
+          <span class="playGlyph" aria-hidden="true">▶</span>
+        </button>
+        <div class="nowPlayingText">
+          <strong id="nowTitle">{tracks[0].title}</strong>
+          <span id="nowComposer">{tracks[0].composer}</span>
+        </div>
+        <span class="timeReadout"><span id="elapsedTime">0:00</span> / <span id="totalTime">{tracks[0].duration}</span></span>
+      </div>
+
+      <input
+        class="progress"
+        id="trackProgress"
+        type="range"
+        min="0"
+        max="1000"
+        value="0"
+        aria-label="Recording progress"
+      />
+
+      <div class="trackList" role="list" aria-label="Choir recordings">
+        {tracks.map((track, index) => (
+          <button
+            class="trackRow"
+            type="button"
+            role="listitem"
+            data-index={index}
+            data-src={track.src}
+            data-title={track.title}
+            data-composer={track.composer}
+            data-duration={track.duration}
+            aria-label={`Play ${track.title} by ${track.composer}`}
+          >
+            <span class="trackNumber">{String(index + 1).padStart(2, "0")}</span>
+            <span class="rowGlyph" aria-hidden="true">▶</span>
+            <span class="trackText">
+              <strong>{track.title}</strong>
+              <span>{track.composer}</span>
+            </span>
+            <span class="trackDuration">{track.duration}</span>
+          </button>
+        ))}
+      </div>
+
+      <audio id="choirAudio" preload="metadata"></audio>
+    </section>
+
+    <figure class="heroPhoto reveal">
+      <img
+        src="/docs/choir/web-images/thumbnail.webp"
+        alt="The choir performing in Hirson"
+        width="1600"
+        height="1067"
+        loading="eager"
+        decoding="async"
+      />
+      <figcaption>Performing during the Semaine de la Voix in Hirson.</figcaption>
+    </figure>
+
+    <section class="section story reveal">
+      <p class="eyebrow">Semaine de la Voix</p>
+      <h2 class="sectionTitle">A week made around voices.</h2>
+      <p>
+        In June 2026 we travelled to Hirson, a small town in northern France, to sing, rehearse and
+        perform during the Semaine de la Voix with Kit Armstrong. The week moved between concentrated
+        rehearsal, public performance and the ordinary rituals that turn a group of singers into a
+        community.
+      </p>
+    </section>
+
+    <section class="photoSequence reveal" aria-label="Photographs from Hirson">
+      <figure class="photoWide">
+        <img src="/docs/choir/web-images/birds-eye-choir.webp" alt="The choir and audience seen from above" loading="lazy" decoding="async" />
+        <figcaption>Choir and audience gathered beneath the vaulted roof.</figcaption>
+      </figure>
+      <div class="photoPair">
+        <figure>
+          <img src="/docs/choir/web-images/pianists.webp" alt="Pianists performing on stage" loading="lazy" decoding="async" />
+          <figcaption>Music shared across voices and instruments.</figcaption>
+        </figure>
+        <figure>
+          <img src="/docs/choir/web-images/male-singers.webp" alt="The male singers performing" loading="lazy" decoding="async" />
+          <figcaption>In performance at Hirson.</figcaption>
+        </figure>
+      </div>
+      <div class="photoPair photoPairWarm">
+        <figure>
+          <img src="/docs/choir/web-images/hirson-nature.webp" alt="Choir members beside the water near Hirson" loading="lazy" decoding="async" />
+          <figcaption>Beyond the rehearsal room.</figcaption>
+        </figure>
+        <figure>
+          <img src="/docs/choir/web-images/shared-meal.webp" alt="The choir sharing a meal" loading="lazy" decoding="async" />
+          <figcaption>Cooking, eating and becoming a choir offstage too.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section liveSection reveal" aria-labelledby="liveTitle">
+      <p class="eyebrow">Live moments</p>
+      <h2 class="sectionTitle" id="liveTitle">Inside the performance.</h2>
+      <p class="sectionIntro">Short extracts from rehearsal, concert and pilgrimage. Starting a video pauses the recordings above.</p>
+
+      <div class="videoGrid">
+        <figure class="videoCard portraitVideo">
+          <video controls playsinline preload="metadata" poster="/docs/choir/video-clips/the-ground-poster.jpg">
+            <source src="/docs/choir/video-clips/the-ground.mp4" type="video/mp4" />
+          </video>
+          <figcaption><strong>The Ground</strong><span>Ola Gjeilo · Hirson</span></figcaption>
+        </figure>
+        <figure class="videoCard portraitVideo">
+          <video controls playsinline preload="metadata" poster="/docs/choir/video-clips/spirit-of-god-poster.jpg">
+            <source src="/docs/choir/video-clips/spirit-of-god.mp4" type="video/mp4" />
+          </video>
+          <figcaption><strong>Spirit of God</strong><span>James E. Moore Jr. · rehearsal in Hirson</span></figcaption>
+        </figure>
+        <figure class="videoCard landscapeVideo">
+          <video controls playsinline preload="metadata" poster="/docs/choir/video-clips/anima-christi-poster.jpg">
+            <source src="/docs/choir/video-clips/anima-christi.mp4" type="video/mp4" />
+          </video>
+          <figcaption><strong>Anima Christi</strong><span>Marco Frisina · Lourdes</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section lourdesSection reveal">
+      <p class="eyebrow">Lourdes · May 2026</p>
+      <h2 class="sectionTitle">Singing on pilgrimage.</h2>
+      <p>
+        At Lourdes, singing took on a different character: part service, part prayer and part
+        accompaniment to thousands moving together through the sanctuary during the Order of Malta
+        International Pilgrimage.
+      </p>
+
+      <div class="lourdesGrid">
+        <figure class="lourdesMain">
+          <img src="/docs/choir/web-images/lourdes-choir.webp" alt="Choir members at Lourdes" loading="lazy" decoding="async" />
+          <figcaption>Between services at the sanctuary.</figcaption>
+        </figure>
+        <figure>
+          <img src="/docs/choir/web-images/lourdes-mosaic.webp" alt="Mosaic inside the sanctuary at Lourdes" loading="lazy" decoding="async" />
+          <figcaption>Sacred art inside the sanctuary.</figcaption>
+        </figure>
+        <figure>
+          <img src="/docs/choir/web-images/lourdes-procession.webp" alt="Night procession at Lourdes" loading="lazy" decoding="async" />
+          <figcaption>The candlelit procession at night.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <ExploreNext currentHref="/projects/creative/choir" />
+  </article>
+
+  <script is:inline>
+    function initChoirPlayer() {
+      const root = document.getElementById("choirProject");
+      const audio = document.getElementById("choirAudio");
+      if (!root || !audio || root.dataset.playerBound === "true") return;
+      root.dataset.playerBound = "true";
+
+      const rows = Array.from(root.querySelectorAll(".trackRow"));
+      const videos = Array.from(root.querySelectorAll("video"));
+      const mainPlay = document.getElementById("mainPlay");
+      const progress = document.getElementById("trackProgress");
+      const nowTitle = document.getElementById("nowTitle");
+      const nowComposer = document.getElementById("nowComposer");
+      const elapsed = document.getElementById("elapsedTime");
+      const total = document.getElementById("totalTime");
+      const status = document.getElementById("playerStatus");
+      let activeIndex = 0;
+
+      const formatTime = (seconds) => {
+        if (!Number.isFinite(seconds)) return "0:00";
+        const minutes = Math.floor(seconds / 60);
+        return `${minutes}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+      };
+
+      const syncPlayingState = () => {
+        const playing = !audio.paused;
+        mainPlay?.classList.toggle("isPlaying", playing);
+        if (mainPlay) {
+          mainPlay.querySelector(".playGlyph").textContent = playing ? "❚❚" : "▶";
+          mainPlay.setAttribute("aria-label", `${playing ? "Pause" : "Play"} ${rows[activeIndex]?.dataset.title || "recording"}`);
+        }
+        rows.forEach((row, index) => {
+          const active = index === activeIndex;
+          row.classList.toggle("isActive", active);
+          row.classList.toggle("isPlaying", active && playing);
+          row.querySelector(".rowGlyph").textContent = active && playing ? "❚❚" : "▶";
+        });
+        if (status) status.textContent = playing ? "Now playing" : "Paused";
+      };
+
+      const selectTrack = (index, shouldPlay = true) => {
+        const row = rows[index];
+        if (!row) return;
+        activeIndex = index;
+        audio.src = row.dataset.src;
+        if (nowTitle) nowTitle.textContent = row.dataset.title;
+        if (nowComposer) nowComposer.textContent = row.dataset.composer;
+        if (total) total.textContent = row.dataset.duration;
+        if (elapsed) elapsed.textContent = "0:00";
+        if (progress) progress.value = "0";
+        syncPlayingState();
+
+        if (shouldPlay) {
+          audio.play().catch(() => {
+            if (status) status.textContent = "Press play to begin";
+            syncPlayingState();
+          });
+        }
+      };
+
+      rows.forEach((row, index) => {
+        row.addEventListener("click", () => {
+          if (activeIndex === index && audio.src) {
+            if (audio.paused) audio.play();
+            else audio.pause();
+            return;
+          }
+          selectTrack(index);
+        });
+      });
+
+      mainPlay?.addEventListener("click", () => {
+        if (!audio.src) {
+          selectTrack(activeIndex);
+          return;
+        }
+        if (audio.paused) audio.play();
+        else audio.pause();
+      });
+
+      progress?.addEventListener("input", () => {
+        if (!Number.isFinite(audio.duration) || !audio.duration) return;
+        audio.currentTime = (Number(progress.value) / 1000) * audio.duration;
+      });
+
+      audio.addEventListener("play", () => {
+        videos.forEach((video) => video.pause());
+        syncPlayingState();
+      });
+      audio.addEventListener("pause", syncPlayingState);
+      audio.addEventListener("timeupdate", () => {
+        if (elapsed) elapsed.textContent = formatTime(audio.currentTime);
+        if (progress && Number.isFinite(audio.duration) && audio.duration) {
+          progress.value = String(Math.round((audio.currentTime / audio.duration) * 1000));
+        }
+      });
+      audio.addEventListener("ended", () => {
+        if (activeIndex < rows.length - 1) selectTrack(activeIndex + 1);
+        else syncPlayingState();
+      });
+
+      videos.forEach((video) => {
+        video.addEventListener("play", () => {
+          audio.pause();
+          videos.forEach((other) => {
+            if (other !== video) other.pause();
+          });
+        });
+      });
+
+      const stopAllMedia = () => {
+        audio.pause();
+        videos.forEach((video) => video.pause());
+      };
+      document.addEventListener("astro:before-swap", stopAllMedia, { once: true });
+      window.addEventListener("pagehide", stopAllMedia, { once: true });
+
+      selectTrack(0, true);
+    }
+
+    initChoirPlayer();
+    document.addEventListener("astro:page-load", initChoirPlayer);
+  </script>
+
+  <style>
+    .backLink {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--muted);
+      font-size: var(--font-size-sm);
+      text-decoration: none;
+    }
+    .backLink:hover { text-decoration: underline; }
+
+    .eyebrow {
+      margin: 0 0 0.3rem;
+      color: var(--accent);
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .playerSection {
+      margin: 2rem 0 2.75rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--bg-elevated);
+      box-shadow: 0 18px 48px rgba(40, 34, 23, 0.08);
+    }
+
+    .playerHeading,
+    .nowPlaying {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.1rem 1.25rem;
+    }
+
+    .playerHeading { border-bottom: 1px solid var(--border); }
+    .playerStatus { margin: 0; font-size: var(--font-size-sm); }
+
+    .nowPlaying { justify-content: flex-start; }
+    .mainPlay {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 auto;
+      border: 0;
+      border-radius: 50%;
+      background: #8a3a3a;
+      color: white;
+      cursor: pointer;
+    }
+    .mainPlay:hover { transform: scale(1.04); }
+    .playGlyph { display: inline-block; font-size: 0.82rem; }
+
+    .nowPlayingText {
+      display: grid;
+      flex: 1;
+      min-width: 0;
+    }
+    .nowPlayingText strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .nowPlayingText span { color: var(--muted); font-size: var(--font-size-sm); }
+    .timeReadout { color: var(--muted); font-size: var(--font-size-xs); white-space: nowrap; }
+
+    .progress {
+      display: block;
+      width: calc(100% - 2.5rem);
+      height: 3px;
+      margin: 0 auto 1rem;
+      accent-color: #8a3a3a;
+      cursor: pointer;
+    }
+
+    .trackList { border-top: 1px solid var(--border); }
+    .trackRow {
+      display: grid;
+      grid-template-columns: 2rem 1.5rem minmax(0, 1fr) auto;
+      gap: 0.55rem;
+      align-items: center;
+      width: 100%;
+      padding: 0.8rem 1.25rem;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+    }
+    .trackRow:last-child { border-bottom: 0; }
+    .trackRow:hover,
+    .trackRow.isActive { background: rgba(138, 58, 58, 0.07); }
+    .trackRow.isActive .trackText strong,
+    .trackRow.isActive .rowGlyph { color: #8a3a3a; }
+    .trackNumber,
+    .trackDuration { color: var(--muted); font-size: var(--font-size-xs); }
+    .rowGlyph { font-size: 0.65rem; text-align: center; }
+    .trackText { display: grid; min-width: 0; }
+    .trackText strong {
+      overflow: hidden;
+      font-size: var(--font-size-md);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .trackText span { color: var(--muted); font-size: var(--font-size-sm); }
+
+    .heroPhoto,
+    .photoSequence figure,
+    .lourdesGrid figure,
+    .videoCard { margin: 0; }
+    .heroPhoto img,
+    .photoSequence img,
+    .lourdesGrid img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+    }
+    figcaption {
+      margin-top: 0.5rem;
+      color: var(--muted);
+      font-size: var(--font-size-sm);
+      line-height: 1.4;
+    }
+
+    .story { max-width: 62ch; margin-top: 2.75rem; }
+    .photoSequence { display: grid; gap: 1.5rem; margin-top: 1.5rem; }
+    .photoWide img { aspect-ratio: 16 / 10; object-fit: cover; }
+    .photoPair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    .photoPair img { aspect-ratio: 4 / 3; object-fit: cover; }
+    .photoPairWarm img { aspect-ratio: 1 / 1; }
+
+    .liveSection { margin-top: 3.25rem; }
+    .sectionIntro { max-width: 60ch; }
+    .videoGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+    .videoCard {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--bg-elevated);
+    }
+    .videoCard video {
+      display: block;
+      width: 100%;
+      max-height: 510px;
+      background: #080808;
+      object-fit: contain;
+    }
+    .videoCard figcaption {
+      display: grid;
+      margin: 0;
+      padding: 0.8rem 1rem 0.9rem;
+    }
+    .videoCard figcaption span { color: var(--muted); }
+    .landscapeVideo { grid-column: 1 / -1; }
+    .landscapeVideo video { aspect-ratio: 16 / 9; }
+
+    .lourdesSection { margin-top: 3.25rem; }
+    .lourdesGrid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      align-items: start;
+    }
+    .lourdesMain { grid-row: span 2; }
+    .lourdesMain img { aspect-ratio: 4 / 5; object-fit: cover; }
+    .lourdesGrid > figure:not(.lourdesMain) img { aspect-ratio: 1 / 1; object-fit: cover; }
+
+    :global(html[data-theme="dark"]) .playerSection,
+    :global(html[data-theme="dark"]) .videoCard {
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+    }
+
+    @media (max-width: 600px) {
+      .playerHeading { align-items: flex-start; }
+      .playerStatus { display: none; }
+      .nowPlaying { flex-wrap: wrap; }
+      .timeReadout { width: 100%; padding-left: 3.9rem; }
+      .trackRow { grid-template-columns: 1.5rem 1.2rem minmax(0, 1fr) auto; padding-inline: 0.85rem; }
+      .trackNumber { display: none; }
+      .photoPair,
+      .videoGrid,
+      .lourdesGrid { grid-template-columns: 1fr; }
+      .landscapeVideo,
+      .lourdesMain { grid-column: auto; grid-row: auto; }
+      .videoCard video { max-height: 70vh; }
+      .lourdesMain img,
+      .lourdesGrid > figure:not(.lourdesMain) img { aspect-ratio: auto; }
+    }
+  </style>
+</Layout>

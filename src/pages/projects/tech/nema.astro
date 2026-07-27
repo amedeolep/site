@@ -1,25 +1,27 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import PdfStack from "../../../components/PdfStack.astro";
+import ExploreNext from "../../../components/ExploreNext.astro";
 ---
 
 <Layout title="MPhil Dissertation">
-  <header class="hero">
+  <header class="hero reveal">
     <a href="/projects" class="backLink">← Projects</a>
     <h1 class="title">MPhil Dissertation <br /> SEvdA Lab, Cambridge</h1>
     <p class="lede">This page outlines my work developing bespoke hardware to enable novel means of investigating the interactions between parasitic nematodes and arabidopsis, by leveraging RUBY pigment expression and nematode colouration change in HSV.</p>
   </header>
 
 
-  <section class="section">
+  <section class="section reveal">
     <h2 class="sectionTitle">Poster</h2>
     <PdfStack src="/docs/poster.pdf" ariaLabel="NEMA poster PDF" />
   </section>
 
-  <section class="section">
+  <section class="section reveal">
   		<h2 class="sectionTitle">Project Report</h2>
     <PdfStack src="/docs/NEMA.pdf" ariaLabel="NEMA dissertation PDF" />
   </section>
+  <ExploreNext currentHref="/projects/tech/nema" />
 
   <style>
     .backLink {

@@ -5,13 +5,13 @@ export const buenosAires = {
 
   preview: {
     image: "/docs/argentina/buenos-aires/1.JPG",
-    blurb: "3-weeks exploring beaches, parties, and polo fields.",
+    blurb: "Recoleta, Palermo, la Rural, wine bars, museums...",
   },
 
   gallery: [
     {
       image: "/docs/argentina/buenos-aires/1.JPG",
-      caption: "A big rock.",
+      caption: "",
     },
     {
       image: "/docs/argentina/buenos-aires/2.JPG",
@@ -39,26 +39,6 @@ export const buenosAires = {
     },
     {
       image: "/docs/argentina/buenos-aires/8.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/buenos-aires/9.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/buenos-aires/10.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/buenos-aires/11.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/buenos-aires/12.JPG",
-      caption: "",
-    },
-    {
-      image: "/docs/argentina/buenos-aires/13.JPG",
       caption: "",
     },
   ],

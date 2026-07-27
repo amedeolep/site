@@ -24,3 +24,6 @@ pnpm-debug.log*
 .idea/
 
 .vercel/
+
+# Full-resolution source media kept locally; publish optimized derivatives only
+media-source/

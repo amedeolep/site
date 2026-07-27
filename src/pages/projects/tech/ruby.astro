@@ -1,21 +1,23 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import PdfStack from "../../../components/PdfStack.astro";
+import ExploreNext from "../../../components/ExploreNext.astro";
 ---
 
 
 <Layout title="Research Project">
-  <header class="hero">
+  <header class="hero reveal">
     <a href="/projects" class="backLink">← Projects</a>
     <h1 class="title">Research Project <br /> Brockington Lab, Cambridge</h1>
     <p class="lede">This page outlines my work assembling a RUBY cassette driven by an abscisic acid (stress) dependent promoter, and testing colorimetric plant stress detection via transient expression in Nicotiana.</p>
   </header>
 
 
-  <section class="section">
+  <section class="section reveal">
     <h2 class="sectionTitle">Project Report</h2>
     <PdfStack src="/docs/ruby.pdf" ariaLabel="ruby dissertation PDF" />
   </section>
+  <ExploreNext currentHref="/projects/tech/ruby" />
 
   <style>
     .backLink {
