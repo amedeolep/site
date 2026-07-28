@@ -27,3 +27,6 @@ pnpm-debug.log*
 
 # Full-resolution source media kept locally; publish optimized derivatives only
 media-source/
+
+# Raw uploads for future project pages; keep the small PROJECT.md briefs
+project-intake/*/files/

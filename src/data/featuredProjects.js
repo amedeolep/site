@@ -47,4 +47,12 @@ export const featuredProjects = [
 		fallbackThumbnail: "/docs/choir/web-images/thumbnail.webp",
 		blurb: "Five recordings and a summer of singing in Hirson and Lourdes.",
 	},
+	{
+		title: "Restoring a 1970 Puch Maxi",
+		category: "Build and Research",
+		href: "/projects/tech/puch-maxi",
+		thumbnail: "/docs/puch-maxi/images/road-to-london.webp",
+		fallbackThumbnail: "/docs/puch-maxi/images/newly-arrived.webp",
+		blurb: "Breaking, learning and rebuilding a temperamental moped for the road from Cambridge to London.",
+	},
 ];

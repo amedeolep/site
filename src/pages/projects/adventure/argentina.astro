@@ -115,7 +115,13 @@ const pins = locations.map((l) => {
     </figure>
   </header>
 
-  <section class="section reveal diarySection" id="diaryReader">
+  <section
+    class="section reveal diarySection"
+    id="diaryReader"
+    role="button"
+    tabindex="0"
+    aria-label="Open diary reader"
+  >
     <p class="invitationKicker">From the diary</p>
     <h2 class="sectionTitle">First day on the estancia.</h2>
 
@@ -143,7 +149,12 @@ const pins = locations.map((l) => {
   <script type="module" src="/scripts/argentinaJourney.js"></script>
 
   <section class="section journeySection reveal" id="journeySection">
-    <div class="journeyInvitation">
+    <div
+      class="journeyInvitation"
+      role="button"
+      tabindex="0"
+      aria-label="Enter the interactive journey"
+    >
       <p class="invitationKicker">An interactive photo essay</p>
       <h2 class="sectionTitle">Follow the journey.</h2>
       <p>Travel across Argentina and Uruguay through an interactive map and photographs shot on Ilford Pan 100 black-and-white film.</p>
@@ -336,6 +347,14 @@ const pins = locations.map((l) => {
         syncFocus();
       }
 
+      function openJourney() {
+        journeyExperience.hidden = false;
+        journeySection.classList.add("isExploring");
+        journeyToggle.setAttribute("aria-expanded", "true");
+        syncFocus();
+        requestAnimationFrame(() => journeySection.scrollIntoView({ behavior: "smooth", block: "start" }));
+      }
+
       const observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
           if (entry.target === diarySection) diaryInReadingZone = entry.isIntersecting;
@@ -368,18 +387,45 @@ const pins = locations.map((l) => {
 
       diaryDetails.addEventListener("toggle", () => {
         diarySection.classList.toggle("isReading", diaryDetails.open);
+        if (diaryDetails.open) {
+          diarySection.removeAttribute("role");
+          diarySection.removeAttribute("tabindex");
+          diarySection.removeAttribute("aria-label");
+        } else {
+          diarySection.setAttribute("role", "button");
+          diarySection.setAttribute("tabindex", "0");
+          diarySection.setAttribute("aria-label", "Open diary reader");
+        }
         syncFocus();
         if (diaryDetails.open) {
           requestAnimationFrame(() => diarySection.scrollIntoView({ behavior: "smooth", block: "start" }));
         }
       });
 
-      journeyToggle.addEventListener("click", () => {
-        journeyExperience.hidden = false;
-        journeySection.classList.add("isExploring");
-        journeyToggle.setAttribute("aria-expanded", "true");
-        syncFocus();
-        requestAnimationFrame(() => journeySection.scrollIntoView({ behavior: "smooth", block: "start" }));
+      diarySection.addEventListener("click", (event) => {
+        if (diaryDetails.open) return;
+        if (event.target.closest("summary, button, a, input, textarea, select")) return;
+        if (window.getSelection()?.toString()) return;
+        diaryDetails.open = true;
+      });
+
+      diarySection.addEventListener("keydown", (event) => {
+        if (diaryDetails.open || (event.key !== "Enter" && event.key !== " ")) return;
+        event.preventDefault();
+        diaryDetails.open = true;
+      });
+
+      journeyToggle.addEventListener("click", openJourney);
+
+      const journeyInvitation = journeySection.querySelector(".journeyInvitation");
+      journeyInvitation?.addEventListener("click", (event) => {
+        if (event.target.closest("button, a")) return;
+        openJourney();
+      });
+      journeyInvitation?.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        openJourney();
       });
 
       journeyClose.addEventListener("click", () => {
@@ -477,6 +523,22 @@ const pins = locations.map((l) => {
     .journeySection {
       scroll-margin-top: 2rem;
       transition: opacity 700ms ease, filter 700ms ease, background 700ms ease, box-shadow 700ms ease, padding 700ms ease;
+    }
+
+    .diarySection:not(.isReading),
+    .journeyInvitation {
+      cursor: pointer;
+    }
+
+    .diarySection:not(.isReading):hover .sectionTitle,
+    .journeyInvitation:hover .sectionTitle {
+      color: var(--accent);
+    }
+
+    .diarySection:focus-visible,
+    .journeyInvitation:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 5px;
     }
 
     .diary { margin: 1rem auto 0; max-width: 76ch; width: 100%; }
