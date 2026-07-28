@@ -33,6 +33,9 @@ import Layout from '../layouts/Layout.astro';
 					</ul>
 				</div>
 			</div>
+			<div class="categoryMotif categoryMotifSingle" aria-hidden="true">
+				<img src="/motifs/gaucho.png" alt="" />
+			</div>
 		</div>
 
 		<div class="item" data-state="closed">
@@ -95,6 +98,10 @@ import Layout from '../layouts/Layout.astro';
 					<!-- Add the rest later by copying a linked <li> above and changing href -->
 				</div>
 			</div>
+			<div class="categoryMotif categoryMotifPair" aria-hidden="true">
+				<img src="/motifs/dna.png" alt="" />
+				<img src="/motifs/pcell.png" alt="" />
+			</div>
 		</div>
 
 		<div class="item" data-state="closed">
@@ -121,6 +128,9 @@ import Layout from '../layouts/Layout.astro';
 					</ul>
 				</div>
 			</div>
+			<div class="categoryMotif categoryMotifSingle" aria-hidden="true">
+				<img src="/motifs/vinci.png" alt="" />
+			</div>
 		</div>
 
 		<div class="item" data-state="closed">
@@ -139,6 +149,9 @@ import Layout from '../layouts/Layout.astro';
 					</ul>
 				</div>
 			</div>
+			<div class="categoryMotif categoryMotifSingle" aria-hidden="true">
+				<img src="/motifs/gaucho.png" alt="" />
+			</div>
 		</div>
 
 		<div class="item" data-state="closed">
@@ -155,6 +168,9 @@ import Layout from '../layouts/Layout.astro';
 						<li><div class="subRow"><span class="subTitle">OMV soup kitchen</span></div></li>
 					</ul>
 				</div>
+			</div>
+			<div class="categoryMotif categoryMotifSingle" aria-hidden="true">
+				<img src="/motifs/gaucho.png" alt="" />
 			</div>
 		</div>
 
@@ -380,6 +396,7 @@ import Layout from '../layouts/Layout.astro';
 		}
 
 		.item {
+			position: relative;
 			border-radius: 14px;
 			border: 1px solid transparent;
 			background: transparent;
@@ -494,6 +511,52 @@ import Layout from '../layouts/Layout.astro';
 
 		.panelInner {
 			padding: 0 1.25rem 1.1rem 1.25rem;
+		}
+
+		.categoryMotif {
+			position: absolute;
+			z-index: 2;
+			top: 54%;
+			right: -11.5rem;
+			display: grid;
+			width: 9.5rem;
+			pointer-events: none;
+			opacity: 0;
+			filter: var(--motif-filter);
+			transform: translate(1.25rem, -46%) scale(0.96);
+			transition: opacity 650ms ease 100ms, transform 750ms cubic-bezier(.2, .75, .2, 1) 80ms;
+		}
+
+		.item[data-state="open"] > .categoryMotif {
+			opacity: 0.48;
+			transform: translate(0, -46%) scale(1);
+		}
+
+		.categoryMotif img {
+			display: block;
+			width: 100%;
+			height: auto;
+			mix-blend-mode: var(--motif-blend);
+		}
+
+		.categoryMotifSingle {
+			right: -13rem;
+			width: 11.75rem;
+		}
+
+		.categoryMotifPair {
+			top: 50%;
+			gap: 0;
+			width: 8.8rem;
+		}
+
+		.categoryMotifPair img:first-child {
+			transform: translate(-0.8rem, 0.5rem) rotate(-8deg);
+		}
+
+		.categoryMotifPair img:last-child {
+			margin-top: -2.8rem;
+			transform: translate(1rem, 0) rotate(6deg);
 		}
 
 		.subList {
@@ -624,6 +687,18 @@ import Layout from '../layouts/Layout.astro';
 		@media (prefers-color-scheme: dark) {
 			.name {
 				color: #8b7a4a;
+			}
+		}
+
+		@media (max-width: 1120px) {
+			.categoryMotif {
+				display: none;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.categoryMotif {
+				transition: none;
 			}
 		}
 	</style>

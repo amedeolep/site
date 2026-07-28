@@ -162,6 +162,35 @@ const showProjectDamask = pathname === "/projects" || pathname.startsWith("/proj
 			initScrollReveal();
 			document.addEventListener('astro:page-load', initScrollReveal);
 		</script>
+		<script is:inline>
+			function initDamaskDrift() {
+				const damask = document.querySelector('.projectDamask');
+				if (!damask || damask.dataset.driftBound === 'true') return;
+				if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+				damask.dataset.driftBound = 'true';
+				let frame = 0;
+
+				const update = () => {
+					frame = 0;
+					damask.style.setProperty('--damask-shift', `${window.scrollY * -0.035}px`);
+				};
+
+				const onScroll = () => {
+					if (!frame) frame = requestAnimationFrame(update);
+				};
+
+				update();
+				window.addEventListener('scroll', onScroll, { passive: true });
+				document.addEventListener('astro:before-swap', () => {
+					window.removeEventListener('scroll', onScroll);
+					if (frame) cancelAnimationFrame(frame);
+				}, { once: true });
+			}
+
+			initDamaskDrift();
+			document.addEventListener('astro:page-load', initDamaskDrift);
+		</script>
 	</body>
 </html>
 
@@ -311,26 +340,27 @@ const showProjectDamask = pathname === "/projects" || pathname.startsWith("/proj
 		position: absolute;
 		top: 0;
 		bottom: 0;
-		width: min(220px, calc((100vw - 800px) / 2));
+		width: min(240px, calc((100vw - 800px) / 2));
 		background-image: url('/motifs/damask-border.webp');
 		background-repeat: repeat-y;
 		background-size: 260px 260px;
-		opacity: 0.12;
+		background-position-y: var(--damask-shift, 0px);
+		opacity: 0.145;
 	}
 
 	.damaskRailLeft {
-		right: calc(50% + 392px);
-		background-position: right top;
+		left: 0;
+		background-position-x: right;
 	}
 
 	.damaskRailRight {
-		left: calc(50% + 392px);
-		background-position: left top;
+		right: 0;
+		background-position-x: left;
 		transform: scaleX(-1);
 	}
 
 	html[data-theme='dark'] .damaskRail {
-		opacity: 0.17;
+		opacity: 0.2;
 	}
 
 	.hero {
