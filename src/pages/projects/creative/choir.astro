@@ -461,8 +461,18 @@ const tracks = [
       line-height: 1.4;
     }
 
-    .story { max-width: 62ch; margin-top: 2.75rem; }
-    .photoSequence { display: grid; gap: 1.5rem; margin-top: 1.5rem; }
+    #choirProject :global(.sectionTitle) { margin-bottom: 0.65rem; }
+    .story {
+      max-width: 56ch;
+      margin-top: 3.25rem;
+    }
+    .story > p:not(.eyebrow),
+    .liveSection > .sectionIntro,
+    .lourdesSection > p:not(.eyebrow) {
+      max-width: 56ch;
+      line-height: 1.55;
+    }
+    .photoSequence { display: grid; gap: 1.5rem; margin-top: 2rem; }
     .photoWide img { aspect-ratio: 16 / 10; object-fit: cover; }
     .photoPair {
       display: grid;
@@ -473,8 +483,7 @@ const tracks = [
     .photoPair img { aspect-ratio: 4 / 3; object-fit: cover; }
     .photoPairWarm img { aspect-ratio: 1 / 1; }
 
-    .liveSection { margin-top: 3.25rem; }
-    .sectionIntro { max-width: 60ch; }
+    .liveSection { margin-top: 4rem; }
     .videoGrid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -503,7 +512,7 @@ const tracks = [
     .landscapeVideo { grid-column: 1 / -1; }
     .landscapeVideo video { aspect-ratio: 16 / 9; }
 
-    .lourdesSection { margin-top: 3.25rem; }
+    .lourdesSection { margin-top: 4rem; }
     .lourdesGrid {
       display: grid;
       grid-template-columns: 1.35fr 0.65fr;

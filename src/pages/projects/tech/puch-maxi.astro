@@ -143,6 +143,15 @@ import ExploreNext from "../../../components/ExploreNext.astro";
       </figure>
     </section>
 
+    <aside class="acknowledgement reveal" aria-label="Acknowledgement">
+      <p class="eyebrow">Acknowledgement</p>
+      <p>
+        Thank you, Freddie, for helping me fix it countless times over many a cup of tea, for
+        keeping it safe for me during my travels, and for giving me a love for tinkering and classic
+        vehicles.
+      </p>
+    </aside>
+
     <ExploreNext currentHref="/projects/tech/puch-maxi" />
   </article>
 
@@ -182,12 +191,18 @@ import ExploreNext from "../../../components/ExploreNext.astro";
       font-size: var(--font-size-sm);
       line-height: 1.35;
     }
-    .opening { max-width: 72ch; }
+    .puchProject :global(.sectionTitle) { margin-bottom: 0.65rem; }
+    .puchProject .section > p:not(.eyebrow),
+    .resolutionText p:not(.eyebrow) {
+      max-width: 58ch;
+      line-height: 1.55;
+    }
+    .opening { max-width: 58ch; }
     .arrivalGrid {
       display: grid;
       grid-template-columns: 0.72fr 1.28fr;
       gap: 1.25rem;
-      margin: 0 0 4.5rem;
+      margin: 0 0 3.5rem;
     }
     .arrivalGrid figure:nth-child(n + 3) { margin-top: 1rem; }
     .arrivalGrid img, .fuelPair img, .brakeSequence img, .frameImage img, .resolution img {
@@ -216,11 +231,10 @@ import ExploreNext from "../../../components/ExploreNext.astro";
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1.5rem 1.25rem;
-      margin-bottom: 4.5rem;
+      margin-bottom: 3.5rem;
     }
     .brakeSequence img { aspect-ratio: 4 / 3; }
     .hardPart { max-width: none; }
-    .hardPart > p { max-width: 72ch; }
     .frameImage { margin-top: 1.5rem; }
     .frameImage img { max-height: 42rem; }
     .resolution {
@@ -228,21 +242,33 @@ import ExploreNext from "../../../components/ExploreNext.astro";
       grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.85fr);
       gap: 2.25rem;
       align-items: center;
-      margin: 5rem 0;
+      margin: 4rem 0 3.5rem;
       padding: 2.25rem;
       border: 1px solid var(--border);
       border-radius: 16px;
       background: var(--bg-elevated);
     }
-    .resolutionText p:not(.eyebrow) { max-width: 58ch; }
     .resolution img { max-height: 35rem; }
+    .acknowledgement {
+      max-width: 58ch;
+      margin: 0 0 4rem;
+      padding: 1.5rem 0 0;
+      border-top: 1px solid var(--border);
+    }
+    .acknowledgement p:last-child {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.05rem;
+      line-height: 1.55;
+    }
 
     @media (max-width: 720px) {
       .arrivalGrid, .fuelPair, .brakeSequence, .resolution { grid-template-columns: 1fr; }
       .heroImage img { height: min(64vh, 640px); }
       .listing img, .arrival img, .fuelPair img, .fuelPair video { height: auto; max-height: 34rem; }
       .arrivalGrid figure:nth-child(n + 3) { margin-top: 0; }
-      .resolution { margin: 3.5rem 0; padding: 1.25rem; }
+      .resolution { margin: 3rem 0; padding: 1.25rem; }
+      .acknowledgement { margin-bottom: 3rem; }
     }
   </style>
 </Layout>
