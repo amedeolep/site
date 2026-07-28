@@ -30,3 +30,6 @@ media-source/
 
 # Raw uploads for future project pages; keep the small PROJECT.md briefs
 project-intake/*/files/
+
+# Local source artwork; the optimized transparent derivative is published
+project-intake/damask.png

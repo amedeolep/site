@@ -9,6 +9,7 @@ const active =
   "";
 
 const showMotifs = pathname === "/";
+const showProjectDamask = pathname === "/projects" || pathname.startsWith("/projects/");
 ---
 
 <!doctype html>
@@ -39,6 +40,14 @@ const showMotifs = pathname === "/";
 					<img class="motif tr" src="/motifs/dna.png" alt="" width="1024" height="1024" loading="eager" decoding="async" />
 					<img class="motif bl" src="/motifs/vinci.png" alt="" width="1024" height="1024" loading="eager" decoding="async" />
 					<img class="motif br" src="/motifs/gaucho.png" alt="" width="1024" height="1024" loading="eager" decoding="async" />
+				</div>
+			)}
+
+			{/* Quiet illuminated-manuscript borders on project pages only */}
+			{showProjectDamask && (
+				<div class="projectDamask" aria-hidden="true">
+					<span class="damaskRail damaskRailLeft"></span>
+					<span class="damaskRail damaskRailRight"></span>
 				</div>
 			)}
 
@@ -286,9 +295,42 @@ const showMotifs = pathname === "/";
 		position: relative; /* anchor motifs to page, so they scroll */
 	}
 
-	.page > :not(.cornerMotifs) {
+	.page > :not(.cornerMotifs):not(.projectDamask) {
 		position: relative;
 		z-index: 1;
+	}
+
+	.projectDamask {
+		position: fixed;
+		inset: 0;
+		z-index: 0;
+		pointer-events: none;
+	}
+
+	.damaskRail {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: min(220px, calc((100vw - 800px) / 2));
+		background-image: url('/motifs/damask-border.webp');
+		background-repeat: repeat-y;
+		background-size: 260px 260px;
+		opacity: 0.12;
+	}
+
+	.damaskRailLeft {
+		right: calc(50% + 392px);
+		background-position: right top;
+	}
+
+	.damaskRailRight {
+		left: calc(50% + 392px);
+		background-position: left top;
+		transform: scaleX(-1);
+	}
+
+	html[data-theme='dark'] .damaskRail {
+		opacity: 0.17;
 	}
 
 	.hero {
@@ -571,6 +613,12 @@ const showMotifs = pathname === "/";
 
 		.motif.bl,
 		.motif.br {
+			display: none;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.projectDamask {
 			display: none;
 		}
 	}
