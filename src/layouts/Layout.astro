@@ -9,7 +9,7 @@ const active =
   "";
 
 const showMotifs = pathname === "/";
-const showProjectDamask = pathname === "/projects" || pathname.startsWith("/projects/");
+const showDamask = pathname === "/" || pathname === "/projects" || pathname.startsWith("/projects/");
 ---
 
 <!doctype html>
@@ -43,8 +43,8 @@ const showProjectDamask = pathname === "/projects" || pathname.startsWith("/proj
 				</div>
 			)}
 
-			{/* Quiet illuminated-manuscript borders on project pages only */}
-			{showProjectDamask && (
+			{/* Quiet illuminated-manuscript borders on home and project pages */}
+			{showDamask && (
 				<div class="projectDamask" aria-hidden="true">
 					<span class="damaskRail damaskRailLeft"></span>
 					<span class="damaskRail damaskRailRight"></span>
