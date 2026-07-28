@@ -51,7 +51,7 @@ export const featuredProjects = [
 		title: "Restoring a 1970 Puch Maxi",
 		category: "Build and Research",
 		href: "/projects/tech/puch-maxi",
-		thumbnail: "/docs/puch-maxi/images/road-to-london.webp",
+		thumbnail: "/docs/puch-maxi/images/road-to-london-thumbnail.webp",
 		fallbackThumbnail: "/docs/puch-maxi/images/newly-arrived.webp",
 		blurb: "Breaking, learning and rebuilding a temperamental moped for the road from Cambridge to London.",
 	},

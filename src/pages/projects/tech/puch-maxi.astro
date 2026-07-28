@@ -172,8 +172,9 @@ import ExploreNext from "../../../components/ExploreNext.astro";
     .heroImage img {
       display: block;
       width: 100%;
-      max-height: 72vh;
+      height: min(72vh, 780px);
       object-fit: cover;
+      object-position: center bottom;
     }
     figcaption {
       padding-top: 0.55rem;
@@ -238,6 +239,7 @@ import ExploreNext from "../../../components/ExploreNext.astro";
 
     @media (max-width: 720px) {
       .arrivalGrid, .fuelPair, .brakeSequence, .resolution { grid-template-columns: 1fr; }
+      .heroImage img { height: min(64vh, 640px); }
       .listing img, .arrival img, .fuelPair img, .fuelPair video { height: auto; max-height: 34rem; }
       .arrivalGrid figure:nth-child(n + 3) { margin-top: 0; }
       .resolution { margin: 3.5rem 0; padding: 1.25rem; }
