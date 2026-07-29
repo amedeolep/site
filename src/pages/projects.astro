@@ -7,6 +7,14 @@ import Layout from '../layouts/Layout.astro';
 		<h1 class="title">Projects.</h1>
 	</header>
 
+	<div class="categoryMotifStage" aria-hidden="true">
+		<img data-motif="journeys" src="/motifs/gaucho.png" alt="" />
+		<img data-motif="build" class="scientificMotif" src="/motifs/dna.png" alt="" />
+		<img data-motif="make" src="/motifs/vinci.png" alt="" />
+		<img data-motif="explore" src="/motifs/gaucho.png" alt="" />
+		<img data-motif="serve" src="/motifs/gaucho.png" alt="" />
+	</div>
+
 	<section class="accordion reveal" aria-label="Projects">
 
 		<div class="item" data-state="closed">
@@ -32,9 +40,6 @@ import Layout from '../layouts/Layout.astro';
 						<li><div class="subRow"><span class="subTitle">Romania</span></div></li>
 					</ul>
 				</div>
-			</div>
-			<div class="categoryMotif categoryMotifSingle" aria-hidden="true">
-				<img src="/motifs/gaucho.png" alt="" />
 			</div>
 		</div>
 
@@ -98,9 +103,6 @@ import Layout from '../layouts/Layout.astro';
 					<!-- Add the rest later by copying a linked <li> above and changing href -->
 				</div>
 			</div>
-			<div class="categoryMotif categoryMotifScientific" aria-hidden="true">
-				<img src="/motifs/dna.png" alt="" />
-			</div>
 		</div>
 
 		<div class="item" data-state="closed">
@@ -127,9 +129,6 @@ import Layout from '../layouts/Layout.astro';
 					</ul>
 				</div>
 			</div>
-			<div class="categoryMotif categoryMotifSingle" aria-hidden="true">
-				<img src="/motifs/vinci.png" alt="" />
-			</div>
 		</div>
 
 		<div class="item" data-state="closed">
@@ -148,9 +147,6 @@ import Layout from '../layouts/Layout.astro';
 					</ul>
 				</div>
 			</div>
-			<div class="categoryMotif categoryMotifSingle" aria-hidden="true">
-				<img src="/motifs/gaucho.png" alt="" />
-			</div>
 		</div>
 
 		<div class="item" data-state="closed">
@@ -167,9 +163,6 @@ import Layout from '../layouts/Layout.astro';
 						<li><div class="subRow"><span class="subTitle">OMV soup kitchen</span></div></li>
 					</ul>
 				</div>
-			</div>
-			<div class="categoryMotif categoryMotifSingle" aria-hidden="true">
-				<img src="/motifs/gaucho.png" alt="" />
 			</div>
 		</div>
 
@@ -286,11 +279,13 @@ import Layout from '../layouts/Layout.astro';
 				if (!btn || !panel) return;
 
 				const key = keyFromItem(item);
+				const motifStage = document.querySelector(".categoryMotifStage");
 
 				if (open) {
 					item.dataset.state = "open";
 					btn.setAttribute("aria-expanded", "true");
 					animateOpen(panel);
+					if (motifStage) motifStage.dataset.active = key;
 
 					if (key) {
 						setHash(key);
@@ -300,6 +295,7 @@ import Layout from '../layouts/Layout.astro';
 					item.dataset.state = "closed";
 					btn.setAttribute("aria-expanded", "false");
 					animateClose(panel);
+					if (motifStage?.dataset.active === key) motifStage.dataset.active = "";
 
 					const current = (window.location.hash || "").replace("#", "");
 					if (key && current === key) setHash("");
@@ -512,33 +508,41 @@ import Layout from '../layouts/Layout.astro';
 			padding: 0 1.25rem 1.1rem 1.25rem;
 		}
 
-		.categoryMotif {
+		.categoryMotifStage {
 			position: fixed;
 			z-index: 2;
 			top: 0.75rem;
 			right: calc(50% - 350px);
-			display: grid;
 			width: 9rem;
+			aspect-ratio: 1;
 			pointer-events: none;
-			opacity: 0;
 			filter: var(--motif-filter);
-			transform: translateX(1.25rem) scale(0.96);
-			transition: opacity 650ms ease 100ms, transform 750ms cubic-bezier(.2, .75, .2, 1) 80ms;
 		}
 
-		.item[data-state="open"] > .categoryMotif {
-			opacity: 0.48;
-			transform: translateX(0) scale(1);
-		}
-
-		.categoryMotif img {
+		.categoryMotifStage img {
+			position: absolute;
+			inset: 0;
 			display: block;
 			width: 100%;
 			height: auto;
+			opacity: 0;
 			mix-blend-mode: var(--motif-blend);
+			transform: scale(0.72);
+			transform-origin: 50% 50%;
+			transition: opacity 520ms ease, transform 650ms cubic-bezier(.2, .75, .2, 1);
 		}
 
-		.categoryMotifScientific {
+		.categoryMotifStage[data-active="journeys"] [data-motif="journeys"],
+		.categoryMotifStage[data-active="build"] [data-motif="build"],
+		.categoryMotifStage[data-active="make"] [data-motif="make"],
+		.categoryMotifStage[data-active="explore"] [data-motif="explore"],
+		.categoryMotifStage[data-active="serve"] [data-motif="serve"] {
+			opacity: 0.48;
+			transform: scale(1);
+		}
+
+		.categoryMotifStage .scientificMotif {
+			inset: 0.5rem;
 			width: 8rem;
 		}
 
@@ -674,13 +678,13 @@ import Layout from '../layouts/Layout.astro';
 		}
 
 		@media (max-width: 1120px) {
-			.categoryMotif {
+			.categoryMotifStage {
 				display: none;
 			}
 		}
 
 		@media (prefers-reduced-motion: reduce) {
-			.categoryMotif {
+			.categoryMotifStage img {
 				transition: none;
 			}
 		}
